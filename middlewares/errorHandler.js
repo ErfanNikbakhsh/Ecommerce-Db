@@ -9,13 +9,11 @@ const notFound = (req, res, next) => {
 // Error Handler
 
 const errorHandler = (err, req, res, next) => {
-  console.log(res.statusCode);
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  console.log(statusCode);
   res.status(statusCode);
   res.json({
     message: err?.message,
-    stack: err?.stack,
+    stack: err?.stack.replace(/^Error: /, ''),
   });
 };
 
