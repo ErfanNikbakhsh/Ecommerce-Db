@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { auth } = require('../middlewares/authMiddleware');
+const { auth, isAdmin } = require('../middlewares/authMiddleware');
 
 const {
   createUser,
@@ -9,20 +9,26 @@ const {
   getUser,
   deleteUser,
   updateUser,
+  blockUser,
+  unBlockUser,
 } = require('../controllers/userController');
 
 const router = express.Router();
 
-router.get('/usersList', getAllUsers);
+router.get('/usersList', auth, isAdmin, getAllUsers);
 
-router.get('/:id', auth, getUser);
+router.get('/:id', auth, isAdmin, getUser);
 
 router.post('/register', createUser);
 
 router.post('/login', userLogin);
 
-router.patch('/:id', updateUser);
+router.patch('/edit', auth, updateUser);
 
-router.patch('/delete/:id', deleteUser);
+router.patch('/delete', auth, deleteUser);
+
+router.patch('/blockUser/:id', auth, isAdmin, blockUser);
+
+router.patch('/unBlockUser/:id', auth, isAdmin, unBlockUser);
 
 module.exports = router;
