@@ -1,4 +1,4 @@
-const generateToken = require('../config/jwtToken');
+const { generateToken, generateRefreshToken } = require('../config/jwtToken');
 const { logMiddleware, isObjectIdValid } = require('../utils');
 const User = require('../models/userModel');
 const asynchandler = require('express-async-handler');
@@ -10,6 +10,10 @@ const createUser = asynchandler(async (req, res, next) => {
   if (!user) {
     // Create a new User
     const newUser = await User.create(req.body);
+    const refreshToken = generateRefreshToken(newUser?._id);
+
+    newUser.refreshToken.push(refreshToken);
+    await newUser.save();
 
     res.json({
       id: newUser?._id,
@@ -17,9 +21,9 @@ const createUser = asynchandler(async (req, res, next) => {
       lastName: newUser?.lastName,
       email: newUser?.email,
       mobile: newUser?.mobile,
-      token: generateToken(newUser?._id),
+      access: generateToken(newUser?._id),
+      refresh: refreshToken,
     });
-    logMiddleware('createUser');
   } else {
     throw new Error('User already exists');
   }
@@ -32,17 +36,40 @@ const userLogin = asynchandler(async (req, res, next) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.isPasswordMatched(password))) {
+    const refreshToken = generateRefreshToken(user?._id);
+    user.refreshToken.push(refreshToken);
+    await user.save();
+
     res.json({
       id: user?._id,
       firstName: user?.firstName,
       lastName: user?.lastName,
       email: user?.email,
       mobile: user?.mobile,
-      token: generateToken(user?._id),
+      access: generateToken(user?._id),
+      refresh: refreshToken,
     });
-    logMiddleware('userLogin');
   } else {
     throw new Error('Invalid Credentials');
+  }
+});
+
+const userLogout = asynchandler(async (req, res, next) => {
+  try {
+    const { enteredRefreshToken } = req.cookies;
+
+    const user = await User.findOne({ refreshToken: enteredRefreshToken }).exec();
+
+    if (!user) return res.sendStatus(204);
+
+    // Delete refresh token in DB
+    const newRefTokenArray = user.refreshToken.filter((rt) => rt !== enteredRefreshToken);
+    user.refreshToken = newRefTokenArray;
+    await user.save();
+
+    return res.sendStatus(204);
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -158,6 +185,7 @@ const unBlockUser = asynchandler(async (req, res, next) => {
 module.exports = {
   createUser,
   userLogin,
+  userLogout,
   getAllUsers,
   getUser,
   updateUser,
