@@ -16,7 +16,7 @@ const {
 
 const router = express.Router();
 
-router.get('/usersList', auth, isAdmin, getAllUsers);
+router.get('/List', auth, isAdmin, getAllUsers);
 
 router.get('/:id', auth, isAdmin, getUser);
 
