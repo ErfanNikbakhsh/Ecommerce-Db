@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'user',
     },
+    refreshToken: [String],
     status: {
       type: String,
       enum: ['active', 'inactive'],
@@ -58,9 +59,9 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre('save', async function () {
   const user = this;
-  const saltRounds = 10;
-
-  user.password = await bcrypt.hash(user.password, saltRounds);
+  if (user.isNew) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
 });
 
 userSchema.methods.isPasswordMatched = async function (enteredPass) {
