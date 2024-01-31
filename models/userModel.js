@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre('save', async function () {
   const user = this;
   if (user.isNew) {
-    user.password = await bcrypt.hash(user.password, 10);
+    user.password = await bcrypt.hash(user.password, process.env.BCRYPT_SALT);
   }
 });
 
