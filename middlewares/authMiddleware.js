@@ -11,7 +11,7 @@ const auth = asynchandler(async (req, res, next) => {
     try {
       if (token) {
         const decoded = jwt.verify(token, process.env.SECRET_KEY);
-        const user = await User.findById(decoded.userId);
+        const user = await User.findById(decoded.userId).exec();
         req.user = user;
         logMiddleware('auth');
         next();
@@ -33,7 +33,7 @@ const refreshToken = asynchandler(async (req, res, next) => {
 
   if (enteredRefreshToken) {
     try {
-      const user = await User.findOne({ refreshToken: enteredRefreshToken }).exec();
+      const user = await User.findOne({ refreshToken: enteredRefreshToken }).lean().exec();
 
       // Detected refresh token reuse!
       if (!user) {

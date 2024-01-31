@@ -5,7 +5,7 @@ const asynchandler = require('express-async-handler');
 
 const createUser = asynchandler(async (req, res, next) => {
   const { email } = req.body;
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).lean().exec();
 
   if (!user) {
     // Create a new User
@@ -33,7 +33,7 @@ const userLogin = asynchandler(async (req, res, next) => {
   const { password, email } = req.body;
 
   //Check User Existence
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).lean().exec();
 
   if (user && (await user.isPasswordMatched(password))) {
     const refreshToken = generateRefreshToken(user?._id);
@@ -58,7 +58,7 @@ const userLogout = asynchandler(async (req, res, next) => {
   try {
     const { enteredRefreshToken } = req.cookies;
 
-    const user = await User.findOne({ refreshToken: enteredRefreshToken }).exec();
+    const user = await User.findOne({ refreshToken: enteredRefreshToken }).lean().exec();
 
     if (!user) return res.sendStatus(204);
 
@@ -75,7 +75,7 @@ const userLogout = asynchandler(async (req, res, next) => {
 
 const getAllUsers = asynchandler(async (req, res, next) => {
   try {
-    const users = await User.find({ softDelete: false });
+    const users = await User.find({ softDelete: false }).lean().exec();
     if (users.length) {
       res.json(users);
     } else {
@@ -92,8 +92,8 @@ const getUser = asynchandler(async (req, res, next) => {
   isObjectIdValid(id);
 
   try {
-    const user = await User.findOne({ _id: id, softDelete: false });
-    console.log(user);
+    const user = await User.findOne({ _id: id, softDelete: false }).lean().exec();
+
     if (user) {
       res.json({ user });
     } else {
