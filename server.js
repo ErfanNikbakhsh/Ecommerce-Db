@@ -3,6 +3,7 @@ const app = express();
 const dotenv = require('dotenv').config();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
 
 const dbConnect = require('./config/dbConnect');
 const authRoutes = require('./routes/authRoutes');
@@ -15,6 +16,7 @@ dbConnect();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(morgan('dev'));
 
 app.use('/api/user', authRoutes);
 app.use('/api/product', productRoutes);
