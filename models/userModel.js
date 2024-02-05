@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const { randomBytes } = require('node:crypto');
+const { hashToken } = require('../utils/Api-Features');
 
 const userSchema = new mongoose.Schema(
   {
@@ -44,6 +46,8 @@ const userSchema = new mongoose.Schema(
       default: 'user',
     },
     refreshToken: [String],
+    passwordResetToken: String,
+    passwordResetTokenExpires: Date,
     status: {
       type: String,
       enum: ['active', 'inactive'],
@@ -59,13 +63,23 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre('save', async function () {
   const user = this;
-  if (user.isNew) {
-    user.password = await bcrypt.hash(user.password, process.env.BCRYPT_SALT);
+  if (user.isNew || user.isModified('password')) {
+    const saltRounds = +process.env.BCRYPT_SALT;
+    user.password = await bcrypt.hash(user.password, saltRounds);
   }
 });
 
 userSchema.methods.isPasswordMatched = async function (enteredPass) {
   return await bcrypt.compare(enteredPass, this.password);
+};
+
+userSchema.methods.genResetToken = function () {
+  const resetToken = randomBytes(32).toString('hex');
+
+  this.passwordResetToken = hashToken(resetToken);
+  this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 const user = mongoose.model('User', userSchema);
