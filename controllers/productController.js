@@ -1,7 +1,7 @@
 const asynchandler = require('express-async-handler');
 const Product = require('../models/productModel');
 const slugify = require('slugify');
-const { logMiddleware, isObjectIdValid } = require('../utils');
+const { logMiddleware, isObjectIdValid } = require('../utils/Api-Features');
 
 const getAllProducts = asynchandler(async (req, res, next) => {
   try {
