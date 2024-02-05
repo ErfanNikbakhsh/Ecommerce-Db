@@ -1,7 +1,12 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const asynchandler = require('express-async-handler');
-const { logMiddleware } = require('../utils');
+const fse = require('fs-extra');
+const path = require('path');
+const handlebars = require('handlebars');
+const { createHash } = require('node:crypto');
+const { logMiddleware, isObjectIdValid, hashToken } = require('../utils/Api-Features');
+const { sendEmail } = require('../utils/email');
 const { generateRefreshToken, generateToken } = require('../config/jwtToken');
 
 const auth = asynchandler(async (req, res, next) => {
@@ -30,10 +35,11 @@ const auth = asynchandler(async (req, res, next) => {
 
 const refreshToken = asynchandler(async (req, res, next) => {
   const enteredRefreshToken = req.cookies.refreshToken;
+  const hashedEnteredRefToken = hashToken(enteredRefreshToken);
 
   if (enteredRefreshToken) {
     try {
-      const user = await User.findOne({ refreshToken: enteredRefreshToken }).lean().exec();
+      const user = await User.findOne({ refreshToken: hashedEnteredRefToken }).exec();
 
       // Detected refresh token reuse!
       if (!user) {
@@ -45,7 +51,7 @@ const refreshToken = asynchandler(async (req, res, next) => {
       }
 
       // Remove the used refresh token and update DB
-      const newRefTokenArray = user.refreshToken.filter((rt) => rt !== enteredRefreshToken);
+      const newRefTokenArray = user.refreshToken.filter((rt) => rt !== hashedEnteredRefToken);
       user.refreshToken = newRefTokenArray;
       await user.save();
 
@@ -55,7 +61,9 @@ const refreshToken = asynchandler(async (req, res, next) => {
       // Generate the new tokens and add RF to the Db
       const newAccessToken = generateToken(user._id);
       const newRefToken = generateRefreshToken(user._id);
-      user.refreshToken.push(newRefToken);
+      const hashedRefToken = hashToken(newRefToken);
+
+      user.refreshToken.push(hashedRefToken);
       await user.save();
 
       res.status(200).json({
@@ -84,4 +92,137 @@ const isAdmin = asynchandler(async (req, res, next) => {
   }
 });
 
-module.exports = { auth, isAdmin, refreshToken };
+const forgotPassword = asynchandler(async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error('User Not Found!');
+  }
+
+  // Generate a random resetToken
+  const resetToken = user.genResetToken();
+  await user.save();
+
+  // Set the reset password form url (This is a url that shows the form for resetting the password when the user clicks on it.)
+  const resetUrl = `${req.protocol}://${req.get('host')}/api/user/passwordResetForm/${resetToken}`;
+  const message = `We have received a password reset request. Please use the below link to reset your password\n\n ${resetUrl}\n\nThis reset password link will be valid only for 10 minutes.`;
+
+  const emailTemplatePath = path.join(__dirname, '../public/templates/email.html');
+
+  // Read the content of the email template file
+  const readFile = async (filePath) => {
+    try {
+      return await fse.readFile(filePath, 'utf-8');
+    } catch (error) {
+      console.log('Error reading file:', error);
+      throw error;
+    }
+  };
+
+  const emailTemplate = await readFile(emailTemplatePath);
+
+  // Replace the placeholders
+  const compiledTemplate = handlebars.compile(emailTemplate);
+  const replacements = {
+    resetUrl: resetUrl,
+    firstName: user.firstName,
+  };
+
+  const htmlToSend = compiledTemplate(replacements);
+
+  // Send the email
+  try {
+    // Why do we need the await keyword when calling sendEmail function?
+    await sendEmail({
+      email: user.email,
+      subject: 'Password change request received',
+      message: message,
+      htmlToSend: htmlToSend,
+    });
+
+    res.status(200).send('Password reset link send to the user email');
+  } catch (error) {
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
+    await user.save();
+
+    console.log(error);
+    throw new Error('There was an error sending password reset email. Please try again later');
+  }
+});
+
+const validateResetToken = asynchandler(async (req, res, next) => {
+  try {
+    const { token } = req.params;
+    const hashedToken = hashToken(token);
+
+    const user = await User.findOne()
+      .where({ passwordResetToken: hashedToken })
+      .where('passwordResetTokenExpires')
+      .gt(Date.now());
+
+    if (!user) {
+      throw new Error('Token is invalid or has expired!');
+    }
+
+    res.status(200).send('Token is valid');
+  } catch (error) {
+    next(error);
+  }
+});
+
+const resetPassword = asynchandler(async (req, res, next) => {
+  try {
+    const { newPass, confirmNewPass } = req.body;
+    const { token } = req.params;
+    const hashedToken = hashToken(token);
+
+    const user = await User.findOne()
+      .where({ passwordResetToken: hashedToken })
+      .where('passwordResetTokenExpires')
+      .gt(Date.now());
+
+    if (!user) {
+      throw new Error('Token is invalid or has expired!');
+    }
+
+    if (newPass !== confirmNewPass) {
+      throw new Error(`Password and confirm password doesn't match!`);
+    }
+
+    // Resetting the password
+    user.password = newPass;
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
+    //user.passwordChangedAt = Date.now() // I don't get it why do we need this field.
+
+    // Login the user
+    const refreshToken = generateRefreshToken(user?._id);
+    const hashedRefToken = hashToken(refreshToken);
+
+    user.refreshToken.push(hashedRefToken);
+    await user.save();
+
+    res.status(200).json({
+      id: user?._id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      email: user?.email,
+      mobile: user?.mobile,
+      access: generateToken(user?._id),
+      refresh: refreshToken,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+module.exports = {
+  auth,
+  isAdmin,
+  refreshToken,
+  forgotPassword,
+  resetPassword,
+  validateResetToken,
+};
