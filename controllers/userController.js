@@ -1,5 +1,5 @@
 const { generateToken, generateRefreshToken } = require('../config/jwtToken');
-const { logMiddleware, isObjectIdValid } = require('../utils');
+const { logMiddleware, isObjectIdValid, hashToken } = require('../utils/Api-Features');
 const User = require('../models/userModel');
 const asynchandler = require('express-async-handler');
 
@@ -11,8 +11,9 @@ const createUser = asynchandler(async (req, res, next) => {
     // Create a new User
     const newUser = await User.create(req.body);
     const refreshToken = generateRefreshToken(newUser?._id);
+    const hashedRefToken = hashToken(refreshToken);
 
-    newUser.refreshToken.push(refreshToken);
+    user.refreshToken.push(hashedRefToken);
     await newUser.save();
 
     res.json({
@@ -37,7 +38,9 @@ const userLogin = asynchandler(async (req, res, next) => {
 
   if (user && (await user.isPasswordMatched(password))) {
     const refreshToken = generateRefreshToken(user?._id);
-    user.refreshToken.push(refreshToken);
+    const hashedRefToken = hashToken(refreshToken);
+
+    user.refreshToken.push(hashedRefToken);
     await user.save();
 
     res.json({
@@ -57,13 +60,14 @@ const userLogin = asynchandler(async (req, res, next) => {
 const userLogout = asynchandler(async (req, res, next) => {
   try {
     const { enteredRefreshToken } = req.cookies;
+    const hashedRefToken = hashToken(enteredRefreshToken);
 
-    const user = await User.findOne({ refreshToken: enteredRefreshToken }).lean().exec();
+    const user = await User.findOne({ refreshToken: hashedRefToken }).exec();
 
     if (!user) return res.sendStatus(204);
 
     // Delete refresh token in DB
-    const newRefTokenArray = user.refreshToken.filter((rt) => rt !== enteredRefreshToken);
+    const newRefTokenArray = user.refreshToken.filter((rt) => rt !== hashedRefToken);
     user.refreshToken = newRefTokenArray;
     await user.save();
 
