@@ -5,7 +5,7 @@ const asynchandler = require('express-async-handler');
 
 const createUser = asynchandler(async (req, res, next) => {
   const { email } = req.body;
-  const user = await User.findOne({ email }).lean().exec();
+  const user = await User.findOne({ email }).exec();
 
   if (!user) {
     // Create a new User
@@ -13,7 +13,7 @@ const createUser = asynchandler(async (req, res, next) => {
     const refreshToken = generateRefreshToken(newUser?._id);
     const hashedRefToken = hashToken(refreshToken);
 
-    user.refreshToken.push(hashedRefToken);
+    newUser.refreshToken.push(hashedRefToken);
     await newUser.save();
 
     res.json({
@@ -34,7 +34,7 @@ const userLogin = asynchandler(async (req, res, next) => {
   const { password, email } = req.body;
 
   //Check User Existence
-  const user = await User.findOne({ email }).lean().exec();
+  const user = await User.findOne({ email }).exec();
 
   if (user && (await user.isPasswordMatched(password))) {
     const refreshToken = generateRefreshToken(user?._id);
@@ -96,7 +96,7 @@ const getUser = asynchandler(async (req, res, next) => {
   isObjectIdValid(id);
 
   try {
-    const user = await User.findOne({ _id: id, softDelete: false }).lean().exec();
+    const user = await User.findOne({ _id: id, softDelete: false }).exec();
 
     if (user) {
       res.json({ user });
