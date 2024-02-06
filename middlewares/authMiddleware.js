@@ -4,8 +4,7 @@ const asynchandler = require('express-async-handler');
 const fse = require('fs-extra');
 const path = require('path');
 const handlebars = require('handlebars');
-const { createHash } = require('node:crypto');
-const { logMiddleware, isObjectIdValid, hashToken } = require('../utils/Api-Features');
+const { logMiddleware, hashToken } = require('../utils/Api-Features');
 const { sendEmail } = require('../utils/email');
 const { generateRefreshToken, generateToken } = require('../config/jwtToken');
 
@@ -89,6 +88,34 @@ const isAdmin = asynchandler(async (req, res, next) => {
   } else {
     logMiddleware('isAdmin');
     next();
+  }
+});
+
+const updatePassword = asynchandler(async (req, res, next) => {
+  const { user } = req;
+  const { oldPass, newPass, confirmNewPass } = req.body;
+
+  try {
+    if (!(await user.isPasswordMatched(oldPass))) {
+      throw new Error('Invalid Credentials');
+    }
+
+    if (newPass && confirmNewPass) {
+      if (newPass !== confirmNewPass) {
+        return res
+          .status(400)
+          .json({ message: `New password and confirm password doesn't match!` });
+      }
+    } else {
+      return res.status(400).json({ message: 'New password and confirm password is required' });
+    }
+
+    user.password = newPass;
+    await user.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -222,6 +249,7 @@ module.exports = {
   auth,
   isAdmin,
   refreshToken,
+  updatePassword,
   forgotPassword,
   resetPassword,
   validateResetToken,
