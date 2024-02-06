@@ -153,7 +153,6 @@ const forgotPassword = asynchandler(async (req, res, next) => {
   const compiledTemplate = handlebars.compile(emailTemplate);
   const replacements = {
     resetUrl: resetUrl,
-    firstName: user.firstName,
   };
 
   const htmlToSend = compiledTemplate(replacements);
