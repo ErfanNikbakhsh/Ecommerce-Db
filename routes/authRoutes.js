@@ -7,6 +7,7 @@ const {
   forgotPassword,
   resetPassword,
   validateResetToken,
+  updatePassword,
 } = require('../middlewares/authMiddleware');
 
 const {
@@ -42,6 +43,8 @@ router.post('/logout', auth, userLogout);
 router.patch('/edit', auth, updateUser);
 
 router.patch('/delete', auth, deleteUser);
+
+router.patch('/changePassword', auth, updatePassword);
 
 router.patch('/resetPassword/:token', resetPassword);
 
