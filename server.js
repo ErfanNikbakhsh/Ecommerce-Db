@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const dbConnect = require('./config/dbConnect');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
+const blogRoutes = require('./routes/blogRoutes');
 const { errorHandler, notFound } = require('./middlewares/errorHandler');
 
 const PORT = process.env.PORT || 4000;
@@ -20,6 +21,7 @@ app.use(morgan('dev'));
 
 app.use('/api/user', authRoutes);
 app.use('/api/product', productRoutes);
+app.use('/api/blog', blogRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
