@@ -46,6 +46,15 @@ const blogSchema = new mongoose.Schema(
       type: String,
       default: 'admin',
     },
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active',
+    },
+    softDelete: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: {
