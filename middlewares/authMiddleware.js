@@ -46,7 +46,7 @@ const refreshToken = asynchandler(async (req, res, next) => {
 
         // Find the hackedUser and delete all refresh tokens
         await User.findByIdAndUpdate(decoded?.userId, { refreshToken: [] });
-        res.status(403).json({ message: 'Access denied, Please login again!' });
+        return res.status(403).json({ message: 'Access denied, Please login again!' });
       }
 
       // Remove the used refresh token and update DB

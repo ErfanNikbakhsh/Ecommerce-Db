@@ -59,7 +59,8 @@ const userLogin = asynchandler(async (req, res, next) => {
 
 const userLogout = asynchandler(async (req, res, next) => {
   try {
-    const { enteredRefreshToken } = req.cookies;
+    const enteredRefreshToken = req.cookies.refreshToken;
+    if (!enteredRefreshToken) throw new Error('There Is No Refresh Token Attached!');
     const hashedRefToken = hashToken(enteredRefreshToken);
 
     const user = await User.findOne({ refreshToken: hashedRefToken }).exec();

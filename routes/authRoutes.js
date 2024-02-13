@@ -26,11 +26,11 @@ const router = express.Router();
 
 router.get('/List', auth, isAdmin, getAllUsers);
 
-router.get('/:id', auth, isAdmin, getUser);
-
 router.get('/refreshToken', refreshToken);
 
 router.get('/validateResetToken/:token', validateResetToken);
+
+router.get('/:id', auth, isAdmin, getUser);
 
 router.post('/register', createUser);
 
