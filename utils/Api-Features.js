@@ -8,8 +8,10 @@ const logMiddleware = (name) => {
 };
 
 const isObjectIdValid = (id) => {
-  const isValid = ObjectId.isValid(id) && String(new ObjectId(id)) === id;
-  if (!isValid) throw new Error('Id Is Not Valid');
+  if (!typeof id === Object) {
+    const isValid = ObjectId.isValid(id) && String(new ObjectId(id)) === id;
+    if (!isValid) throw new Error('Id Is Not Valid');
+  }
 };
 
 const hashToken = (token) => {
