@@ -67,6 +67,18 @@ const blogSchema = new mongoose.Schema(
   }
 );
 
+// blogSchema.virtual('isLiked').get(function () {});
+
+// blogSchema.virtual('isDisliked').get(function () {});
+
+// blogSchema.virtual('totalLikes').get(function () {
+//   return this.likes.length;
+// });
+
+// blogSchema.virtual('totalDislikes').get(function () {
+//   return this.disLikes.length;
+// });
+
 const Blog = mongoose.model('Blog', blogSchema);
 
 module.exports = Blog;
