@@ -8,19 +8,20 @@ const {
   deleteBlog,
   likeTheBlog,
   dislikeTheBlog,
+  checkBlogInteraction,
 } = require('../controllers/blogController');
 
 const router = express.Router();
 
 router.get('/list', getAllBlogs);
 
-router.get('/:id', getBlog);
+router.get('/:id', checkBlogInteraction, getBlog);
 
 router.post('/', auth, isAdmin, createBlog);
 
-router.patch('/likes', auth, likeTheBlog);
+router.patch('/likes', auth, checkBlogInteraction, likeTheBlog);
 
-router.patch('/dislikes', auth, dislikeTheBlog);
+router.patch('/dislikes', auth, checkBlogInteraction, dislikeTheBlog);
 
 router.patch('/delete/:id', auth, isAdmin, deleteBlog);
 
