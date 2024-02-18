@@ -9,6 +9,9 @@ const dbConnect = require('./config/dbConnect');
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
 const blogRoutes = require('./routes/blogRoutes');
+const prodCategoryRoutes = require('./routes/prodCategoryRoutes');
+const blogCategoryRoutes = require('./routes/blogCategoryRoutes');
+const brandRoutes = require('./routes/brandRoutes');
 const { errorHandler, notFound } = require('./middlewares/errorHandler');
 
 const PORT = process.env.PORT || 4000;
@@ -22,6 +25,9 @@ app.use(morgan('dev'));
 app.use('/api/user', authRoutes);
 app.use('/api/product', productRoutes);
 app.use('/api/blog', blogRoutes);
+app.use('/api/prodCategory', prodCategoryRoutes);
+app.use('/api/blogCategory', blogCategoryRoutes);
+app.use('/api/brand', brandRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
