@@ -1,5 +1,6 @@
 const asynchandler = require('express-async-handler');
 const Product = require('../models/productModel');
+const User = require('../models/userModel');
 const slugify = require('slugify');
 const { logMiddleware, isObjectIdValid } = require('../utils/Api-Features');
 
@@ -125,4 +126,42 @@ const deleteProduct = asynchandler(async (req, res, next) => {
   }
 });
 
-module.exports = { createProduct, getProduct, getAllProducts, updateProduct, deleteProduct };
+const addToWishlist = asynchandler(async (req, res, next) => {
+  const { productId } = req.body;
+  const user = req.user;
+
+  try {
+    const alreadyAdded = user.wishlist.find((id) => id.toString() === productId);
+
+    if (alreadyAdded) {
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        { $pull: { wishlist: productId } },
+        { new: true }
+      );
+
+      res.json(updatedUser);
+    } else {
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        {
+          $push: { wishlist: productId },
+        },
+        { new: true }
+      );
+
+      res.json(updatedUser);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+module.exports = {
+  createProduct,
+  getProduct,
+  getAllProducts,
+  updateProduct,
+  deleteProduct,
+  addToWishlist,
+};
