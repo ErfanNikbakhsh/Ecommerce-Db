@@ -37,10 +37,12 @@ const userSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    wishlist: {
-      type: mongoose.Types.ObjectId,
-      ref: 'Product',
-    },
+    wishlist: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Product',
+      },
+    ],
     role: {
       type: String,
       default: 'user',
