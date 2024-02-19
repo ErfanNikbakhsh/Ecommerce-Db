@@ -157,6 +157,70 @@ const addToWishlist = asynchandler(async (req, res, next) => {
   }
 });
 
+const rating = asynchandler(async (req, res, next) => {
+  const userId = req.user._id;
+  const { star, productId, comment } = req.body;
+
+  let updateQuery;
+  let queryCondition;
+
+  const validStars = [1, 2, 3, 4, 5];
+  if (!validStars.includes(star)) throw new Error(`star's value should be an integer between 1-5`);
+
+  try {
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      throw new Error('Product not found.');
+    }
+
+    // Check if the user has already rated the product
+    let alreadyRated = product?.ratings?.find(
+      (item) => item.postedBy.toString() === userId.toString()
+    );
+
+    if (alreadyRated) {
+      // If user has already rated, update the existing rating
+      queryCondition = { ratings: { $elemMatch: alreadyRated } };
+      updateQuery = { $set: { 'ratings.$.star': star, 'ratings.$.comment': comment } };
+    } else {
+      // If user has not rated yet, add a new rating
+      queryCondition = { _id: productId };
+      updateQuery = { $push: { ratings: { star, comment, postedBy: userId } } };
+    }
+
+    // Add or update the product's rating
+    const updatedProduct = await Product.findOneAndUpdate(queryCondition, updateQuery, {
+      new: true,
+    });
+
+    if (!updatedProduct) {
+      throw new Error('Failed to update product rating.');
+    }
+
+    // Calculate the total rating and average rating
+    let totalRating = updatedProduct?.ratings?.length;
+    let ratingSum = updatedProduct?.ratings?.map((item) => item.star).reduce((a, c) => a + c, 0);
+    let averageRating = Math.round(ratingSum / totalRating);
+
+    let finalProduct = await Product.findByIdAndUpdate(
+      productId,
+      {
+        totalRating: averageRating,
+      },
+      { new: true }
+    );
+
+    if (!finalProduct) {
+      throw new Error('Failed to update product total rating.');
+    }
+
+    res.json(finalProduct);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = {
   createProduct,
   getProduct,
@@ -164,4 +228,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   addToWishlist,
+  rating,
 };
