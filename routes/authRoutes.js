@@ -20,6 +20,8 @@ const {
   blockUser,
   unBlockUser,
   userLogout,
+  adminLogin,
+  getWishlist,
 } = require('../controllers/userController');
 
 const router = express.Router();
@@ -28,6 +30,8 @@ router.get('/List', auth, isAdmin, getAllUsers);
 
 router.get('/refreshToken', refreshToken);
 
+router.get('/wishlist', auth, getWishlist);
+
 router.get('/validateResetToken/:token', validateResetToken);
 
 router.get('/:id', auth, isAdmin, getUser);
@@ -35,6 +39,8 @@ router.get('/:id', auth, isAdmin, getUser);
 router.post('/register', createUser);
 
 router.post('/login', userLogin);
+
+router.post('/adminLogin', adminLogin);
 
 router.post('/forgotPassword', forgotPassword);
 
