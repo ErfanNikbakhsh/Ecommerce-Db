@@ -2,7 +2,9 @@ const asynchandler = require('express-async-handler');
 const Product = require('../models/productModel');
 const User = require('../models/userModel');
 const slugify = require('slugify');
+const fs = require('fs');
 const { logMiddleware, isObjectIdValid } = require('../utils/Api-Features');
+const cloudinaryUploadImg = require('../utils/cloudinary');
 
 const getAllProducts = asynchandler(async (req, res, next) => {
   try {
@@ -221,6 +223,38 @@ const rating = asynchandler(async (req, res, next) => {
   }
 });
 
+const uploadImages = asynchandler(async (req, res, next) => {
+  const { id } = req.params;
+  const paths = req.resizedFilesPath;
+  isObjectIdValid(id);
+
+  try {
+    const product = await Product.findById(id);
+
+    if (!product) throw new Error('Product Not Found');
+
+    // Upload files to cloudinairy
+    const newPathsArray = await Promise.all(
+      paths.map(async (path) => {
+        const cloudResult = await cloudinaryUploadImg(path);
+
+        // Delete the resized image
+        fs.unlinkSync(path);
+
+        return cloudResult;
+      })
+    );
+
+    // Update the product's images field with the provided cloudinary url
+    product.images.push(...newPathsArray);
+    await product.save();
+
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = {
   createProduct,
   getProduct,
@@ -229,4 +263,5 @@ module.exports = {
   deleteProduct,
   addToWishlist,
   rating,
+  uploadImages,
 };

@@ -2,6 +2,8 @@ const asynchandler = require('express-async-handler');
 const { logMiddleware, isObjectIdValid } = require('../utils/Api-Features');
 const Blog = require('../models/blogModel');
 const User = require('../models/userModel');
+const fs = require('fs');
+const cloudinaryUploadImg = require('../utils/cloudinary');
 
 const getBlog = asynchandler(async (req, res, next) => {
   try {
@@ -175,6 +177,38 @@ const checkBlogInteraction = asynchandler(async (req, res, next) => {
   }
 });
 
+const uploadImages = asynchandler(async (req, res, next) => {
+  const { id } = req.params;
+  const paths = req.resizedFilesPath;
+  isObjectIdValid(id);
+
+  try {
+    const blog = await Blog.findById(id);
+
+    if (!blog) throw new Error('Blog Not Found');
+
+    // Upload files to cloudinairy
+    const newPathsArray = await Promise.all(
+      paths.map(async (path) => {
+        const cloudResult = await cloudinaryUploadImg(path);
+
+        // Delete the resized image
+        fs.unlinkSync(path);
+
+        return cloudResult;
+      })
+    );
+
+    // Update the blog's images field with the provided cloudinary url
+    blog.images.push(...newPathsArray);
+    await blog.save();
+
+    res.json(blog);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = {
   checkBlogInteraction,
   createBlog,
@@ -184,4 +218,5 @@ module.exports = {
   deleteBlog,
   likeTheBlog,
   dislikeTheBlog,
+  uploadImages,
 };
