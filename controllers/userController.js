@@ -57,6 +57,35 @@ const userLogin = asynchandler(async (req, res, next) => {
   }
 });
 
+const adminLogin = asynchandler(async (req, res, next) => {
+  const { password, email } = req.body;
+
+  //Check admin Existence
+  const admin = await User.findOne({ email }).exec();
+
+  if (admin.role !== 'admin') throw new Error('Not Authorized');
+
+  if (admin && (await admin.isPasswordMatched(password))) {
+    const refreshToken = generateRefreshToken(admin?._id);
+    const hashedRefToken = hashToken(refreshToken);
+
+    admin.refreshToken.push(hashedRefToken);
+    await admin.save();
+
+    res.json({
+      id: admin?._id,
+      firstName: admin?.firstName,
+      lastName: admin?.lastName,
+      email: admin?.email,
+      mobile: admin?.mobile,
+      access: generateToken(admin?._id),
+      refresh: refreshToken,
+    });
+  } else {
+    throw new Error('Invalid Credentials');
+  }
+});
+
 const userLogout = asynchandler(async (req, res, next) => {
   try {
     const enteredRefreshToken = req.cookies.refreshToken;
@@ -187,9 +216,23 @@ const unBlockUser = asynchandler(async (req, res, next) => {
   }
 });
 
+const getWishlist = asynchandler(async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findById(id).populate('wishlist');
+
+    if (!user) throw new Error('User Not Found!');
+
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = {
   createUser,
   userLogin,
+  adminLogin,
   userLogout,
   getAllUsers,
   getUser,
@@ -197,4 +240,5 @@ module.exports = {
   deleteUser,
   blockUser,
   unBlockUser,
+  getWishlist,
 };
