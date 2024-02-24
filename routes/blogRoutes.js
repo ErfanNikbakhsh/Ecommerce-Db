@@ -9,7 +9,9 @@ const {
   likeTheBlog,
   dislikeTheBlog,
   checkBlogInteraction,
+  uploadImages,
 } = require('../controllers/blogController');
+const { uploadPhoto, blogImgResize } = require('../middlewares/uploadImages');
 
 const router = express.Router();
 
@@ -22,6 +24,8 @@ router.post('/', auth, isAdmin, createBlog);
 router.patch('/likes', auth, checkBlogInteraction, likeTheBlog);
 
 router.patch('/dislikes', auth, checkBlogInteraction, dislikeTheBlog);
+
+router.patch('/upload/:id', auth, isAdmin, uploadPhoto, blogImgResize, uploadImages);
 
 router.patch('/delete/:id', auth, isAdmin, deleteBlog);
 
