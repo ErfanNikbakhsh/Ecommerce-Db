@@ -27,12 +27,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    addresses: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: 'Address',
-      },
-    ],
+    addresses: {
+      type: String,
+    },
     cart: {
       type: Array,
       default: [],
