@@ -19,24 +19,31 @@ const productSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
+      min: 0,
       required: true,
     },
-    brand: { type: String, required: true },
+    brand: { type: mongoose.Types.ObjectId, ref: 'Brand' },
     categoryId: {
-      type: String,
-      required: true,
+      type: mongoose.Types.ObjectId,
+      ref: 'prodCategory',
     },
     quantity: { type: Number, required: true },
     sold: {
       type: Number,
       default: 0,
-      select: false,
     },
-    images: Array,
-    color: {
-      type: String,
-      required: true,
-    },
+    images: [
+      {
+        publicId: String,
+        url: String,
+      },
+    ],
+    color: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Color',
+      },
+    ],
     ratings: [
       {
         star: Number,
