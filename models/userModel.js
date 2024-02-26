@@ -27,9 +27,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    addresses: {
-      type: String,
-    },
+    addresses: [
+      {
+        addressTitle: String,
+        address: String,
+        postalCode: String,
+      },
+    ],
     cart: {
       type: Array,
       default: [],
