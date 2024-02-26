@@ -5,13 +5,13 @@ const {
   updateBrand,
   deleteBrand,
   getBrand,
-  getAllProdCategories,
+  getAllBrands,
 } = require('../controllers/brandController');
 const { isAdmin, auth } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-router.get('/list', auth, isAdmin, getAllProdCategories);
+router.get('/list', auth, isAdmin, getAllBrands);
 
 router.get('/:id', auth, isAdmin, getBrand);
 
