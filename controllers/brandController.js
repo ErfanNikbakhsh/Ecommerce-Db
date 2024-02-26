@@ -9,17 +9,17 @@ const getBrand = asynchandler(async (req, res, next) => {
     const { id } = req.params;
     isObjectIdValid(id);
 
-    const category = await Brand.findById(id);
-    res.status(200).json(category);
+    const brand = await Brand.findById(id);
+    res.status(200).json(brand);
   } catch (error) {
     next(error);
   }
 });
 
-const getAllProdCategories = asynchandler(async (req, res, next) => {
+const getAllBrands = asynchandler(async (req, res, next) => {
   try {
-    const category = await Brand.find();
-    res.status(200).json(category);
+    const brand = await Brand.find();
+    res.status(200).json(brand);
   } catch (error) {
     next(error);
   }
@@ -27,8 +27,8 @@ const getAllProdCategories = asynchandler(async (req, res, next) => {
 
 const createBrand = asynchandler(async (req, res, next) => {
   try {
-    const newCategory = await Brand.create(req.body);
-    res.status(201).json(newCategory);
+    const newBrand = await Brand.create(req.body);
+    res.status(201).json(newBrand);
   } catch (error) {
     next(error);
   }
@@ -39,8 +39,8 @@ const updateBrand = asynchandler(async (req, res, next) => {
     const { id } = req.params;
     isObjectIdValid(id);
 
-    const updatedCategory = await Brand.findByIdAndUpdate(id, req.body, { new: true });
-    res.status(200).json(updatedCategory);
+    const updatedBrand = await Brand.findByIdAndUpdate(id, req.body, { new: true });
+    res.status(200).json(updatedBrand);
   } catch (error) {
     next(error);
   }
@@ -63,5 +63,5 @@ module.exports = {
   updateBrand,
   deleteBrand,
   getBrand,
-  getAllProdCategories,
+  getAllBrands,
 };
