@@ -11,8 +11,8 @@ const blogSchema = new mongoose.Schema(
       required: true,
     },
     category: {
-      type: String,
-      required: true,
+      type: mongoose.Types.ObjectId,
+      ref: 'blogCategory',
     },
     totalViews: {
       type: Number,
@@ -38,9 +38,12 @@ const blogSchema = new mongoose.Schema(
         ref: 'User',
       },
     ],
-    images: {
-      type: Array,
-    },
+    images: [
+      {
+        publicId: String,
+        url: String,
+      },
+    ],
     author: {
       type: String,
       default: 'admin',
