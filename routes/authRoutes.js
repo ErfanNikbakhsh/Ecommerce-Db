@@ -8,6 +8,7 @@ const {
   resetPassword,
   validateResetToken,
   updatePassword,
+  applyRequestLimiter,
 } = require('../middlewares/authMiddleware');
 
 const {
@@ -23,6 +24,7 @@ const {
   adminLogin,
   getWishlist,
 } = require('../controllers/userController');
+const { requestLimiter } = require('../utils/Api-Features');
 
 const router = express.Router();
 
@@ -38,9 +40,9 @@ router.get('/:id', auth, isAdmin, getUser);
 
 router.post('/register', createUser);
 
-router.post('/login', userLogin);
+router.post('/login', requestLimiter, userLogin);
 
-router.post('/adminLogin', adminLogin);
+router.post('/adminLogin', requestLimiter, adminLogin);
 
 router.post('/forgotPassword', forgotPassword);
 
@@ -52,7 +54,7 @@ router.patch('/delete', auth, deleteUser);
 
 router.patch('/changePassword', auth, updatePassword);
 
-router.patch('/resetPassword/:token', resetPassword);
+router.patch('/resetPassword/:token', requestLimiter, resetPassword);
 
 router.patch('/blockUser/:id', auth, isAdmin, blockUser);
 
