@@ -9,15 +9,17 @@ const {
   addToWishlist,
   rating,
   uploadImages,
+  formatProduct,
+  formatProducts,
 } = require('../controllers/productController');
 const { isAdmin, auth } = require('../middlewares/authMiddleware');
 const { uploadPhoto, productImgResize } = require('../middlewares/uploadImages');
 
 const router = express.Router();
 
-router.get('/List', getAllProducts);
+router.get('/List', getAllProducts, formatProducts);
 
-router.get('/:id', getProduct);
+router.get('/:id', getProduct, formatProduct);
 
 router.post('/', auth, isAdmin, createProduct);
 
@@ -29,6 +31,6 @@ router.patch('/rating', auth, rating);
 
 router.patch('/delete/:id', auth, isAdmin, deleteProduct);
 
-router.patch('/:id', auth, isAdmin, updateProduct);
+router.patch('/:id', auth, isAdmin, updateProduct, formatProduct);
 
 module.exports = router;
