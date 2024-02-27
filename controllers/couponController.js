@@ -11,7 +11,16 @@ const getCoupon = asynchandler(async (req, res, next) => {
 
     if (!coupon) throw new Error('Coupon Not Found');
 
-    res.status(200).json({ coupon });
+    res.status(200).send({
+      couponId: coupon?._id,
+      code: coupon?.code,
+      expiry: coupon?.expiry,
+      discountType: coupon?.discountType,
+      discountAmount: coupon?.discountAmount,
+      usageLimit: coupon?.usageLimit,
+      currentUsage: coupon?.currentUsage,
+      minOrderAmount: coupon?.minOrderAmount,
+    });
   } catch (error) {
     next(error);
   }
@@ -19,8 +28,22 @@ const getCoupon = asynchandler(async (req, res, next) => {
 
 const getAllCoupons = asynchandler(async (req, res, next) => {
   try {
-    const coupon = await Coupon.find().lean().exec();
-    res.json(coupon);
+    const coupons = await Coupon.find().lean().exec();
+
+    res.status(200).send(
+      coupons.map((coupon) => {
+        return {
+          couponId: coupon?._id,
+          code: coupon?.code,
+          expiry: coupon?.expiry,
+          discountType: coupon?.discountType,
+          discountAmount: coupon?.discountAmount,
+          usageLimit: coupon?.usageLimit,
+          currentUsage: coupon?.currentUsage,
+          minOrderAmount: coupon?.minOrderAmount,
+        };
+      })
+    );
   } catch (error) {
     next(error);
   }
@@ -37,7 +60,16 @@ const createCoupon = asynchandler(async (req, res, next) => {
 
     const NewCoupon = await Coupon.create({ ...couponData, code });
 
-    res.status(201).json(NewCoupon);
+    res.status(201).send({
+      couponId: NewCoupon?._id,
+      code: NewCoupon?.code,
+      expiry: NewCoupon?.expiry,
+      discountType: NewCoupon?.discountType,
+      discountAmount: NewCoupon?.discountAmount,
+      usageLimit: NewCoupon?.usageLimit,
+      currentUsage: NewCoupon?.currentUsage,
+      minOrderAmount: NewCoupon?.minOrderAmount,
+    });
   } catch (error) {
     next(error);
   }
@@ -48,8 +80,20 @@ const updateCoupon = asynchandler(async (req, res, next) => {
     const { id } = req.params;
     isObjectIdValid(id);
 
-    const updatedCoupon = await Coupon.findByIdAndUpdate(id, req.body, { new: true });
-    res.status(200).json({ updatedCoupon });
+    const updatedCoupon = await Coupon.findByIdAndUpdate(id, req.body, { new: true }).exec();
+
+    if (!updatedCoupon) throw new Error('Coupon Not Found');
+
+    res.status(200).send({
+      couponId: updatedCoupon?._id,
+      code: updatedCoupon?.code,
+      expiry: updatedCoupon?.expiry,
+      discountType: updatedCoupon?.discountType,
+      discountAmount: updatedCoupon?.discountAmount,
+      usageLimit: updatedCoupon?.usageLimit,
+      currentUsage: updatedCoupon?.currentUsage,
+      minOrderAmount: updatedCoupon?.minOrderAmount,
+    });
   } catch (error) {
     next(error);
   }
@@ -67,8 +111,11 @@ const deleteCoupon = asynchandler(async (req, res, next) => {
       id,
       { softDelete: true, expiry: updatedExpiry },
       { new: true }
-    );
-    res.status(204).json({ deletedCoupon });
+    ).exec();
+
+    if (!deletedCoupon) throw new Error('Coupon Not Found');
+
+    res.sendStatus(204);
   } catch (error) {
     next(error);
   }

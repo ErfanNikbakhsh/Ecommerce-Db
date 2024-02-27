@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      immutable: true,
     },
     mobile: {
       type: String,
@@ -50,6 +51,7 @@ const userSchema = new mongoose.Schema(
     },
     refreshTokens: [
       {
+        _id: false,
         token: String,
         expiresAt: Date,
       },

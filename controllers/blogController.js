@@ -7,12 +7,38 @@ const cloudinaryUploadImg = require('../utils/cloudinary');
 
 const getBlog = asynchandler(async (req, res, next) => {
   try {
-    const { blog, blogId } = req;
+    const { blogId } = req;
 
     // Update the Total views
-    await Blog.findByIdAndUpdate(blogId, { $inc: { totalViews: 1 } }, { new: true });
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      blogId,
+      { $inc: { totalViews: 1 } },
+      { new: true }
+    )
+      .populate('category', 'title')
+      .populate('likes', 'firstName lastName')
+      .populate('disLikes', 'firstName lastName')
+      .exec();
 
-    res.status(200).json({ blog });
+    res.status(200).send({
+      blogId: updatedBlog?._id,
+      title: updatedBlog?.title,
+      description: updatedBlog?.description,
+      category: updatedBlog?.category?.title,
+      totalViews: updatedBlog?.totalViews,
+      isLiked: updatedBlog?.isLiked,
+      isDisliked: updatedBlog?.isDisliked,
+      isDisliked: updatedBlog?.isDisliked,
+      likes: updatedBlog?.likes,
+      disLikes: updatedBlog?.disLikes,
+      author: updatedBlog?.author,
+      images: updatedBlog?.images.map((image) => {
+        return {
+          publicId: image.publicId,
+          url: image.url,
+        };
+      }),
+    });
   } catch (error) {
     next(error);
   }
@@ -20,8 +46,35 @@ const getBlog = asynchandler(async (req, res, next) => {
 
 const getAllBlogs = asynchandler(async (req, res, next) => {
   try {
-    const blogs = await Blog.find();
-    res.json(blogs);
+    const blogs = await Blog.find()
+      .populate('category', 'title')
+      .populate('likes', 'firstName lastName')
+      .populate('disLikes', 'firstName lastName')
+      .exec();
+
+    res.send(
+      blogs.map((blog) => {
+        return {
+          blogId: blog?._id,
+          title: blog?.title,
+          description: blog?.description,
+          category: blog?.category?.title,
+          totalViews: blog?.totalViews,
+          isLiked: blog?.isLiked,
+          isDisliked: blog?.isDisliked,
+          isDisliked: blog?.isDisliked,
+          likes: blog?.likes,
+          disLikes: blog?.disLikes,
+          author: blog?.author,
+          images: blog?.images.map((image) => {
+            return {
+              publicId: image.publicId,
+              url: image.url,
+            };
+          }),
+        };
+      })
+    );
   } catch (error) {
     next(error);
   }
@@ -29,8 +82,31 @@ const getAllBlogs = asynchandler(async (req, res, next) => {
 
 const createBlog = asynchandler(async (req, res, next) => {
   try {
-    const newBlog = await Blog.create(req.body);
-    res.status(201).json({ newBlog });
+    const newBlog = await Blog.create(req.body)
+      .populate('category', 'title')
+      .populate('likes', 'firstName lastName')
+      .populate('disLikes', 'firstName lastName')
+      .exec();
+
+    res.status(201).send({
+      blogId: newBlog?._id,
+      title: newBlog?.title,
+      description: newBlog?.description,
+      category: newBlog?.category?.title,
+      totalViews: newBlog?.totalViews,
+      isLiked: newBlog?.isLiked,
+      isDisliked: newBlog?.isDisliked,
+      isDisliked: newBlog?.isDisliked,
+      likes: newBlog?.likes,
+      disLikes: newBlog?.disLikes,
+      author: newBlog?.author,
+      images: newBlog?.images.map((image) => {
+        return {
+          publicId: image.publicId,
+          url: image.url,
+        };
+      }),
+    });
   } catch (error) {
     next(error);
   }
@@ -41,8 +117,31 @@ const updateBlog = asynchandler(async (req, res, next) => {
     const { id } = req.params;
     isObjectIdValid(id);
 
-    const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, { new: true });
-    res.status(200).json({ updatedBlog });
+    const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, { new: true })
+      .populate('category', 'title')
+      .populate('likes', 'firstName lastName')
+      .populate('disLikes', 'firstName lastName')
+      .exec();
+
+    res.status(200).send({
+      blogId: updatedBlog?._id,
+      title: updatedBlog?.title,
+      description: updatedBlog?.description,
+      category: updatedBlog?.category?.title,
+      totalViews: updatedBlog?.totalViews,
+      isLiked: updatedBlog?.isLiked,
+      isDisliked: updatedBlog?.isDisliked,
+      isDisliked: updatedBlog?.isDisliked,
+      likes: updatedBlog?.likes,
+      disLikes: updatedBlog?.disLikes,
+      author: updatedBlog?.author,
+      images: updatedBlog?.images.map((image) => {
+        return {
+          publicId: image.publicId,
+          url: image.url,
+        };
+      }),
+    });
   } catch (error) {
     next(error);
   }
@@ -54,7 +153,7 @@ const deleteBlog = asynchandler(async (req, res, next) => {
     isObjectIdValid(id);
 
     const deletedBlog = await Blog.findByIdAndUpdate(id, { softDelete: true }, { new: true });
-    res.status(204).json({ deletedBlog });
+    res.sendStatus(204);
   } catch (error) {
     next(error);
   }
@@ -87,9 +186,14 @@ const likeTheBlog = asynchandler(async (req, res, next) => {
       updateQuery.isLiked = true;
     }
 
-    const updatedBlog = await Blog.findByIdAndUpdate(blogId, updateQuery, { new: true });
+    const updatedBlog = await Blog.findByIdAndUpdate(blogId, updateQuery, { new: true })
+      .populate('likes', 'firstName lastName')
+      .exec();
 
-    res.json(updatedBlog);
+    res.send({
+      isLiked: updatedBlog.isLiked,
+      likes: updatedBlog.likes,
+    });
   } catch (error) {
     next(error);
   }
@@ -122,9 +226,14 @@ const dislikeTheBlog = asynchandler(async (req, res, next) => {
       updateQuery.isDisliked = true;
     }
 
-    const updatedBlog = await Blog.findByIdAndUpdate(blogId, updateQuery, { new: true });
+    const updatedBlog = await Blog.findByIdAndUpdate(blogId, updateQuery, { new: true })
+      .populate('disLikes', 'firstName lastName')
+      .exec();
 
-    res.json(updatedBlog);
+    res.send({
+      isDisliked: updatedBlog.isDisliked,
+      disLikes: updatedBlog.disLikes,
+    });
   } catch (error) {
     next(error);
   }
@@ -203,7 +312,7 @@ const uploadImages = asynchandler(async (req, res, next) => {
     blog.images.push(...newPathsArray);
     await blog.save();
 
-    res.json(blog);
+    res.send(newPathsArray);
   } catch (error) {
     next(error);
   }

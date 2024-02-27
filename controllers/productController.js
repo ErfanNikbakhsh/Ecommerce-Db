@@ -51,8 +51,16 @@ const getAllProducts = asynchandler(async (req, res, next) => {
       query = query.skip(skip).limit(limit);
     }
 
-    const products = await query.lean().exec();
-    res.status(200).json(products);
+    const products = await query
+      .populate('brand', 'title')
+      .populate('category', 'title')
+      .populate('color', 'title')
+      .exec();
+
+    req.products = products;
+
+    logMiddleware('getAllProducts');
+    next();
   } catch (error) {
     next(error);
   }
@@ -63,10 +71,18 @@ const getProduct = asynchandler(async (req, res, next) => {
     const productId = req.params.id;
     isObjectIdValid(productId);
 
-    const product = await Product.findById(productId).exec();
-    res.status(200).json(product);
+    const product = await Product.findById(productId)
+      .populate('brand', 'title')
+      .populate('category', 'title')
+      .populate('color', 'title')
+      .exec();
+
+    if (!product) throw new Error('Product Not Found!');
+
+    req.product = product;
 
     logMiddleware('getProduct');
+    next();
   } catch (error) {
     next(error);
   }
@@ -96,7 +112,11 @@ const updateProduct = asynchandler(async (req, res, next) => {
     const productId = req.params.id;
     isObjectIdValid(productId);
 
-    const updatedProduct = await Product.findByIdAndUpdate(productId, req.body, { new: true });
+    const updatedProduct = await Product.findByIdAndUpdate(productId, req.body, { new: true })
+      .populate('brand', 'title')
+      .populate('category', 'title')
+      .populate('color', 'title')
+      .exec();
     if (!updatedProduct) {
       res.status(404).send('Product Not Found');
     }
@@ -122,7 +142,63 @@ const deleteProduct = asynchandler(async (req, res, next) => {
     if (!deletedProduct) {
       res.status(404).send('Product Not Found');
     }
-    res.status(204);
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
+  }
+});
+
+const formatProduct = asynchandler(async (req, res, next) => {
+  try {
+    const product = req.product;
+    res.send({
+      productId: product?._id,
+      title: product?.title,
+      slug: product?.slug,
+      description: product?.description,
+      price: product?.price,
+      images: product?.images,
+      brand: product?.brand,
+      category: product?.category,
+      color: product?.color,
+      ratings: product?.ratings?.map((rating) => {
+        return {
+          postedBy: rating?.postedBy,
+          start: rating?.star,
+        };
+      }),
+      totalRating: product?.totalRating,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+const formatProducts = asynchandler(async (req, res, next) => {
+  try {
+    const products = req.products;
+    res.send(
+      products.map((product) => {
+        return {
+          productId: product?._id,
+          title: product?.title,
+          slug: product?.slug,
+          description: product?.description,
+          price: product?.price,
+          images: product?.images,
+          brand: product?.brand,
+          category: product?.category,
+          color: product?.color,
+          ratings: product?.ratings?.map((rating) => {
+            return {
+              postedBy: rating?.postedBy,
+              start: rating?.star,
+            };
+          }),
+          totalRating: product?.totalRating,
+        };
+      })
+    );
   } catch (error) {
     next(error);
   }
@@ -142,7 +218,10 @@ const addToWishlist = asynchandler(async (req, res, next) => {
         { new: true }
       );
 
-      res.json(updatedUser);
+      res.send({
+        productId,
+        message: 'Product removed from the wishlist',
+      });
     } else {
       const updatedUser = await User.findByIdAndUpdate(
         user._id,
@@ -152,7 +231,10 @@ const addToWishlist = asynchandler(async (req, res, next) => {
         { new: true }
       );
 
-      res.json(updatedUser);
+      res.send({
+        productId,
+        message: 'Product added to the wishlist',
+      });
     }
   } catch (error) {
     next(error);
@@ -217,7 +299,10 @@ const rating = asynchandler(async (req, res, next) => {
       throw new Error('Failed to update product total rating.');
     }
 
-    res.json(finalProduct);
+    res.send({
+      productId,
+      message: 'Product rated successfully',
+    });
   } catch (error) {
     next(error);
   }
@@ -249,7 +334,7 @@ const uploadImages = asynchandler(async (req, res, next) => {
     product.images.push(...newPathsArray);
     await product.save();
 
-    res.json(product);
+    res.send(newPathsArray);
   } catch (error) {
     next(error);
   }
@@ -261,6 +346,8 @@ module.exports = {
   getAllProducts,
   updateProduct,
   deleteProduct,
+  formatProduct,
+  formatProducts,
   addToWishlist,
   rating,
   uploadImages,

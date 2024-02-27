@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     brand: { type: mongoose.Types.ObjectId, ref: 'Brand' },
-    categoryId: {
+    category: {
       type: mongoose.Types.ObjectId,
       ref: 'prodCategory',
     },

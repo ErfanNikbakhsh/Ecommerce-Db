@@ -7,8 +7,14 @@ const getBlogCategory = asynchandler(async (req, res, next) => {
     const { id } = req.params;
     isObjectIdValid(id);
 
-    const category = await BlogCategory.findById(id);
-    res.status(200).json(category);
+    const category = await BlogCategory.findById(id).exec();
+
+    if (!category) throw new Error('Category Not Found!');
+
+    res.status(200).send({
+      categoryId: category?._id,
+      title: category?.title,
+    });
   } catch (error) {
     next(error);
   }
@@ -16,8 +22,16 @@ const getBlogCategory = asynchandler(async (req, res, next) => {
 
 const getAllBlogCategories = asynchandler(async (req, res, next) => {
   try {
-    const category = await BlogCategory.find();
-    res.status(200).json(category);
+    const categories = await BlogCategory.find().exec();
+
+    res.status(200).send(
+      categories.map((category) => {
+        return {
+          categoryId: category?._id,
+          title: category?.title,
+        };
+      })
+    );
   } catch (error) {
     next(error);
   }
@@ -26,7 +40,11 @@ const getAllBlogCategories = asynchandler(async (req, res, next) => {
 const createBlogCategory = asynchandler(async (req, res, next) => {
   try {
     const newCategory = await BlogCategory.create(req.body);
-    res.status(201).json(newCategory);
+
+    res.status(201).send({
+      categoryId: newCategory?._id,
+      title: newCategory?.title,
+    });
   } catch (error) {
     next(error);
   }
@@ -37,8 +55,16 @@ const updateBlogCategory = asynchandler(async (req, res, next) => {
     const { id } = req.params;
     isObjectIdValid(id);
 
-    const updatedCategory = await BlogCategory.findByIdAndUpdate(id, req.body, { new: true });
-    res.status(200).json(updatedCategory);
+    const updatedCategory = await BlogCategory.findByIdAndUpdate(id, req.body, {
+      new: true,
+    }).exec();
+
+    if (!updatedCategory) throw new Error('Category Not Found!');
+
+    res.status(200).send({
+      categoryId: updatedCategory?._id,
+      title: updatedCategory?.title,
+    });
   } catch (error) {
     next(error);
   }
@@ -49,7 +75,14 @@ const deleteBlogCategory = asynchandler(async (req, res, next) => {
     const { id } = req.params;
     isObjectIdValid(id);
 
-    await BlogCategory.findByIdAndUpdate(id, { softDelete: true }, { new: true });
+    const deletedCategory = await BlogCategory.findByIdAndUpdate(
+      id,
+      { softDelete: true },
+      { new: true }
+    ).exec();
+
+    if (!deletedCategory) throw new Error('Category Not Found!');
+
     res.sendStatus(204);
   } catch (error) {
     next(error);

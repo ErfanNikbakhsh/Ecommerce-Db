@@ -170,7 +170,7 @@ const forgotPassword = asynchandler(async (req, res, next) => {
       htmlToSend: htmlToSend,
     });
 
-    res.status(200).send('Password reset link send to the user email');
+    res.status(200).send(`Password reset link sent to the user's email`);
   } catch (error) {
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpires = undefined;

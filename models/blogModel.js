@@ -12,7 +12,7 @@ const blogSchema = new mongoose.Schema(
     },
     category: {
       type: mongoose.Types.ObjectId,
-      ref: 'blogCategory',
+      ref: 'BlogCategory',
     },
     totalViews: {
       type: Number,
@@ -59,12 +59,12 @@ const blogSchema = new mongoose.Schema(
     },
   },
   {
-    toJSON: {
-      virtuals: true,
-    },
-    toObject: {
-      virtuals: true,
-    },
+    // toJSON: {
+    //   virtuals: true,
+    // },
+    // toObject: {
+    //   virtuals: true,
+    // },
     timestamps: true,
   }
 );

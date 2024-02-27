@@ -114,15 +114,17 @@ const userLogout = asynchandler(async (req, res, next) => {
 
 const getAllUsers = asynchandler(async (req, res, next) => {
   try {
-    const users = await User.find({ softDelete: false }).lean().exec();
-    if (users.length) {
-      res.json(users);
-    } else {
+    const users = await User.find({ softDelete: false }).populate('wishlist').exec();
+    if (!users.length) {
       res.json('Users Not Found');
     }
+
+    req.users = users;
+
     logMiddleware('getAllUsers');
+    next();
   } catch (error) {
-    throw new Error(error);
+    next(error);
   }
 });
 
@@ -131,16 +133,16 @@ const getUser = asynchandler(async (req, res, next) => {
   isObjectIdValid(id);
 
   try {
-    const user = await User.findOne({ _id: id, softDelete: false }).exec();
+    const user = await User.findOne({ _id: id, softDelete: false }).populate('wishlist').exec();
 
-    if (user) {
-      res.json({ user });
-    } else {
-      res.json('User Not Found');
-    }
+    if (!user) throw new Error('User Not Found');
+
+    req.user = user;
+
     logMiddleware('getUser');
+    next();
   } catch {
-    throw new Error(error);
+    next(error);
   }
 });
 
@@ -150,17 +152,16 @@ const updateUser = asynchandler(async (req, res, next) => {
   try {
     const updatedUser = await User.findOneAndUpdate({ _id: id, softDelete: false }, req.body, {
       new: true,
-    });
-    if (updatedUser) {
-      res.json({
-        user: updatedUser,
-      });
-    } else {
-      res.json('User Not Found');
-    }
+    }).populate('wishlist');
+
+    if (!updateUser) throw new Error('User Not Found');
+
+    req.user = updatedUser;
+
     logMiddleware('updateUser');
+    next();
   } catch (err) {
-    throw new Error(err);
+    next(err);
   }
 });
 
@@ -179,7 +180,7 @@ const deleteUser = asynchandler(async (req, res, next) => {
     }
     logMiddleware('deleteUser');
   } catch {
-    throw new Error(error);
+    next(error);
   }
 });
 
@@ -198,7 +199,7 @@ const blockUser = asynchandler(async (req, res, next) => {
       throw new Error('User Not Found');
     }
   } catch (err) {
-    throw new Error(err);
+    next(err);
   }
 });
 
@@ -217,7 +218,7 @@ const unBlockUser = asynchandler(async (req, res, next) => {
       throw new Error('User Not Found');
     }
   } catch (err) {
-    throw new Error(err);
+    next(err);
   }
 });
 
@@ -228,7 +229,71 @@ const getWishlist = asynchandler(async (req, res, next) => {
 
     if (!user) throw new Error('User Not Found!');
 
-    res.json(user);
+    res.send(
+      user?.wishlist?.map((product) => {
+        return {
+          productId: product?._id,
+          title: product?.title,
+          description: product?.description,
+          price: product?.price,
+        };
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+});
+
+const formatUser = asynchandler(async (req, res, next) => {
+  try {
+    const user = req.user;
+    res.send({
+      userId: user?._id,
+      firstName: user?.firstName,
+      lastName: user.lastName,
+      email: user?.email,
+      mobile: user?.mobile,
+      addresses: user?.addresses,
+      role: user?.role,
+      wishlist: user?.wishlist?.map((product) => {
+        return {
+          productId: product?._id,
+          title: product?.title,
+          description: product?.description,
+          price: product?.price,
+        };
+      }),
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+const formatUsers = asynchandler(async (req, res, next) => {
+  try {
+    const users = req.users;
+
+    res.send(
+      users.map((user) => {
+        return {
+          userId: user?._id,
+          firstName: user?.firstName,
+          lastName: user.lastName,
+          email: user?.email,
+          mobile: user?.mobile,
+          addresses: user?.addresses,
+          role: user?.role,
+          wishlist: user?.wishlist?.map((product) => {
+            return {
+              productId: product?._id,
+              title: product?.title,
+              description: product?.description,
+              price: product?.price,
+            };
+          }),
+        };
+      })
+    );
   } catch (error) {
     next(error);
   }
@@ -261,4 +326,6 @@ module.exports = {
   blockUser,
   unBlockUser,
   getWishlist,
+  formatUser,
+  formatUsers,
 };
