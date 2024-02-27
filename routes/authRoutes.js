@@ -23,12 +23,14 @@ const {
   userLogout,
   adminLogin,
   getWishlist,
+  formatUser,
+  formatUsers,
 } = require('../controllers/userController');
 const { requestLimiter } = require('../utils/Api-Features');
 
 const router = express.Router();
 
-router.get('/List', auth, isAdmin, getAllUsers);
+router.get('/List', auth, isAdmin, getAllUsers, formatUsers);
 
 router.get('/refreshToken', refreshToken);
 
@@ -36,7 +38,7 @@ router.get('/wishlist', auth, getWishlist);
 
 router.get('/validateResetToken/:token', validateResetToken);
 
-router.get('/:id', auth, isAdmin, getUser);
+router.get('/:id', auth, isAdmin, getUser, formatUser);
 
 router.post('/register', createUser);
 
@@ -48,7 +50,7 @@ router.post('/forgotPassword', forgotPassword);
 
 router.post('/logout', auth, userLogout);
 
-router.patch('/edit', auth, updateUser);
+router.patch('/edit', auth, updateUser, formatUser);
 
 router.patch('/delete', auth, deleteUser);
 
