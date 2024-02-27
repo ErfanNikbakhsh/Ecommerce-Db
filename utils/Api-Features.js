@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit');
 const sharp = require('sharp');
 const fse = require('fs-extra');
 const { createHash } = require('node:crypto');
+const schedule = require('node-schedule');
 const ObjectId = mongoose.Types.ObjectId;
 
 const logMiddleware = (name) => {
@@ -43,4 +45,12 @@ const resizeAndSaveImage = async (files, outputFolder) => {
   return resizedFilesPath;
 };
 
-module.exports = { logMiddleware, isObjectIdValid, hashToken, resizeAndSaveImage };
+const requestLimiter = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000, // 24 hours
+  max: 5, // Limit each user to 5 request attempts per day
+  message: 'Too many attempts from this user, please try again later.',
+  keyGenerator: (req, res) => req.path,
+  // handler: (req, res, next, options) => res.status(options.statusCode).send(options.message),
+});
+
+module.exports = { logMiddleware, isObjectIdValid, hashToken, resizeAndSaveImage, requestLimiter };
