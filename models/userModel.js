@@ -48,7 +48,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'user',
     },
-    refreshToken: [String],
+    refreshTokens: [
+      {
+        token: String,
+        expiresAt: Date,
+      },
+    ],
     passwordResetToken: String,
     passwordResetTokenExpires: Date,
     status: {
@@ -85,6 +90,6 @@ userSchema.methods.genResetToken = function () {
   return resetToken;
 };
 
-const user = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = user;
+module.exports = User;

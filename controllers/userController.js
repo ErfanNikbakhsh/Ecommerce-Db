@@ -2,6 +2,8 @@ const { generateToken, generateRefreshToken } = require('../config/jwtToken');
 const { logMiddleware, isObjectIdValid, hashToken } = require('../utils/Api-Features');
 const User = require('../models/userModel');
 const asynchandler = require('express-async-handler');
+const schedule = require('node-schedule');
+const jwt = require('jsonwebtoken');
 
 const createUser = asynchandler(async (req, res, next) => {
   const { email } = req.body;
@@ -11,9 +13,10 @@ const createUser = asynchandler(async (req, res, next) => {
     // Create a new User
     const newUser = await User.create(req.body);
     const refreshToken = generateRefreshToken(newUser?._id);
+    const refreshTokenExp = jwt.verify(refreshToken, process.env.REF_SECRET_KEY).exp * 1000; // review for improvement(made this field for daily expired refresh token clean-up)
     const hashedRefToken = hashToken(refreshToken);
 
-    newUser.refreshToken.push(hashedRefToken);
+    newUser.refreshTokens.push({ token: hashedRefToken, expiresAt: refreshTokenExp });
     await newUser.save();
 
     res.json({
@@ -38,9 +41,10 @@ const userLogin = asynchandler(async (req, res, next) => {
 
   if (user && (await user.isPasswordMatched(password))) {
     const refreshToken = generateRefreshToken(user?._id);
+    const refreshTokenExp = jwt.verify(refreshToken, process.env.REF_SECRET_KEY).exp * 1000;
     const hashedRefToken = hashToken(refreshToken);
 
-    user.refreshToken.push(hashedRefToken);
+    user.refreshTokens.push({ token: hashedRefToken, expiresAt: refreshTokenExp });
     await user.save();
 
     res.json({
@@ -67,9 +71,10 @@ const adminLogin = asynchandler(async (req, res, next) => {
 
   if (admin && (await admin.isPasswordMatched(password))) {
     const refreshToken = generateRefreshToken(admin?._id);
+    const refreshTokenExp = jwt.verify(refreshToken, process.env.REF_SECRET_KEY).exp * 1000;
     const hashedRefToken = hashToken(refreshToken);
 
-    admin.refreshToken.push(hashedRefToken);
+    admin.refreshTokens.push({ token: hashedRefToken, expiresAt: refreshTokenExp });
     await admin.save();
 
     res.json({
@@ -92,13 +97,13 @@ const userLogout = asynchandler(async (req, res, next) => {
     if (!enteredRefreshToken) throw new Error('There Is No Refresh Token Attached!');
     const hashedRefToken = hashToken(enteredRefreshToken);
 
-    const user = await User.findOne({ refreshToken: hashedRefToken }).exec();
+    const user = await User.findOne({ 'refreshTokens.token': hashedRefToken }).exec();
 
     if (!user) return res.sendStatus(204);
 
     // Delete refresh token in DB
-    const newRefTokenArray = user.refreshToken.filter((rt) => rt !== hashedRefToken);
-    user.refreshToken = newRefTokenArray;
+    const newRefTokenArray = user.refreshTokens.filter((rt) => rt.token !== hashedRefToken);
+    user.refreshTokens = newRefTokenArray;
     await user.save();
 
     return res.sendStatus(204);
@@ -226,6 +231,21 @@ const getWishlist = asynchandler(async (req, res, next) => {
     res.json(user);
   } catch (error) {
     next(error);
+  }
+});
+
+// Define a scheduled job to run daily
+const cleanupJob = schedule.scheduleJob('0 0 * * *', async function () {
+  try {
+    // Find users with expired refresh tokens & Remove the expired refresh tokens
+    const result = await User.updateMany(
+      { 'refreshTokens.expiresAt': { $lt: new Date() } },
+      { $pull: { refreshTokens: { expiresAt: { $lt: new Date() } } } }
+    );
+
+    console.log('Refresh token cleanup completed successfully.');
+  } catch (error) {
+    console.error('Error during refresh token cleanup:', error);
   }
 });
 

@@ -4,7 +4,7 @@ const asynchandler = require('express-async-handler');
 const fse = require('fs-extra');
 const path = require('path');
 const handlebars = require('handlebars');
-const { logMiddleware, hashToken } = require('../utils/Api-Features');
+const { logMiddleware, hashToken, requestLimiter } = require('../utils/Api-Features');
 const { sendEmail } = require('../utils/email');
 const { generateRefreshToken, generateToken } = require('../config/jwtToken');
 
@@ -38,20 +38,22 @@ const refreshToken = asynchandler(async (req, res, next) => {
 
   if (enteredRefreshToken) {
     try {
-      const user = await User.findOne({ refreshToken: hashedEnteredRefToken }).exec();
+      const user = await User.findOne({ 'refreshTokens.token': hashedEnteredRefToken }).exec();
 
       // Detected refresh token reuse!
       if (!user) {
         const decoded = jwt.verify(enteredRefreshToken, process.env.REF_SECRET_KEY);
 
         // Find the hackedUser and delete all refresh tokens
-        await User.findByIdAndUpdate(decoded?.userId, { refreshToken: [] });
+        await User.findByIdAndUpdate(decoded?.userId, { refreshTokens: [] });
         return res.status(403).json({ message: 'Access denied, Please login again!' });
       }
 
       // Remove the used refresh token and update DB
-      const newRefTokenArray = user.refreshToken.filter((rt) => rt !== hashedEnteredRefToken);
-      user.refreshToken = newRefTokenArray;
+      const newRefTokenArray = user.refreshTokens.filter(
+        (rt) => rt.token !== hashedEnteredRefToken
+      );
+      user.refreshTokens = newRefTokenArray;
       await user.save();
 
       // Evaluate refresh token
@@ -60,9 +62,10 @@ const refreshToken = asynchandler(async (req, res, next) => {
       // Generate the new tokens and add RF to the Db
       const newAccessToken = generateToken(user._id);
       const newRefToken = generateRefreshToken(user._id);
+      const refreshTokenExp = jwt.verify(newRefToken, process.env.REF_SECRET_KEY).exp;
       const hashedRefToken = hashToken(newRefToken);
 
-      user.refreshToken.push(hashedRefToken);
+      user.refreshTokens.push({ token: hashedRefToken, expiresAt: refreshTokenExp });
       await user.save();
 
       res.status(200).json({
@@ -225,9 +228,10 @@ const resetPassword = asynchandler(async (req, res, next) => {
 
     // Login the user
     const refreshToken = generateRefreshToken(user?._id);
+    const refreshTokenExp = jwt.verify(refreshToken, process.env.REF_SECRET_KEY).exp * 1000;
     const hashedRefToken = hashToken(refreshToken);
 
-    user.refreshToken.push(hashedRefToken);
+    user.refreshTokens.push({ token: hashedRefToken, expiresAt: refreshTokenExp });
     await user.save();
 
     res.status(200).json({
