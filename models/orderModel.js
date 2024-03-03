@@ -23,6 +23,7 @@ const orderSchema = new mongoose.Schema(
     totalQuantity: { type: Number, min: 1 },
     totalPrice: Number,
     totalPayablePrice: Number,
+    orderCode: { type: String, unique: true },
     orderStatus: {
       type: String,
       enum: [
