@@ -30,6 +30,7 @@ const addToCart = asynchandler(async (req, res, next) => {
         // Product already exists
         cart.products[existingProductIndex].quantity++;
         cart.totalPrice = calculateTotalPrice(cart.products);
+        cart.totalPayablePrice = cart.totalPrice;
         cart.totalQuantity++;
       } else {
         // New product, push to array
@@ -41,6 +42,7 @@ const addToCart = asynchandler(async (req, res, next) => {
         });
         cart.totalQuantity++;
         cart.totalPrice = calculateTotalPrice(cart.products);
+        cart.totalPayablePrice = cart.totalPrice;
       }
 
       const updatedCart = await cart.save();
@@ -59,6 +61,7 @@ const addToCart = asynchandler(async (req, res, next) => {
         ],
         user: userId,
         totalPrice: product.price,
+        totalPayablePrice: product.price,
       });
 
       return res.status(201).send(newCart);
@@ -100,6 +103,7 @@ const getCart = asynchandler(async (req, res, next) => {
 
       // Update the totalPrice of the shopping cart
       cart.totalPrice = calculateTotalPrice(cart.products);
+      cart.totalPayablePrice = card.totalPrice;
       await cart.save();
     }
 
@@ -174,6 +178,7 @@ const removeItemFromCart = asynchandler(async (req, res, next) => {
       cart.totalQuantity -= cart.products[productIndex].quantity;
       cart.products.splice(productIndex, 1);
       cart.totalPrice = calculateTotalPrice(cart.products);
+      cart.totalPayablePrice = cart.totalPrice;
     } else {
       throw new Error('There is no product with the given colorId & productId in cart');
     }
@@ -215,7 +220,7 @@ const validateCoupon = asynchandler(async (req, res, next) => {
 
     // Check if the cart total meets the minimum cart amount
     if (cart.totalPrice < coupon.minOrderAmount) {
-      throw new Error('Order total does not meet the minimum requirement');
+      throw new Error('Cart total does not meet the minimum requirement');
     }
 
     if (coupon.currentUsage >= coupon.usageLimit) {
