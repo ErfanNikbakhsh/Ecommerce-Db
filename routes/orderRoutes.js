@@ -6,6 +6,7 @@ const {
   createOrder,
   deleteOrder,
   sendOrder,
+  formatOrder,
   updateOrderStatus,
 } = require('../controllers/orderController');
 const { clearCart, getCart } = require('../controllers/cartController');
@@ -16,9 +17,9 @@ router.get('/list', auth, getAllOrdersByUserId);
 
 router.get('/:orderId', auth, getOrder);
 
-router.post('/', auth, getCart, createOrder, clearCart, sendOrder);
+router.post('/', auth, getCart, createOrder, clearCart, formatOrder, sendOrder);
 
-router.patch('/updateStatus/:orderId', isAdmin, auth, updateOrderStatus);
+router.patch('/updateStatus/:orderId', auth, isAdmin, updateOrderStatus);
 
 router.patch('/delete/:orderId', auth, deleteOrder);
 
