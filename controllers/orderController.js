@@ -11,7 +11,7 @@ const getOrder = asynchandler(async (req, res, next) => {
     const order = await Order.findOne()
       .where('_id')
       .equals(orderId)
-      .populate('productId', 'title images')
+      .populate('products.productId', 'title _id images')
       .exec();
 
     if (!order) throw new Error('Order Not Found!');
@@ -43,7 +43,7 @@ const getAllOrdersByUserId = asynchandler(async (req, res, next) => {
     const userId = req.user._id;
 
     const orders = await Order.find({ orderBy: userId })
-      .populate('productId', 'title images')
+      .populate('products.productId', 'title _id images')
       .exec();
 
     if (orders.length === 0) throw new Error('Orders Not Found');
@@ -132,7 +132,42 @@ const updateOrderStatus = asynchandler(async (req, res, next) => {
       { new: true }
     );
 
+    if (!updateOrderStatus) throw new Error('Order Not Found');
+
     res.send(updateOrderStatus);
+  } catch (error) {
+    next(error);
+  }
+});
+
+const formatOrder = asynchandler(async (req, res, next) => {
+  try {
+    const order = req.order;
+    const userId = req.user._id;
+
+    const populatedOrder = await order.populate('products.productId', 'title _id images');
+
+    req.order = {
+      products: populatedOrder?.products?.map((product) => {
+        return {
+          productId: product?.productId._id,
+          title: product?.productId.title,
+          images: product?.productId.images,
+          quantity: product?.quantity,
+          color: product?.color,
+          price: product?.price,
+        };
+      }),
+      orderBy: userId,
+      totalQuantity: populatedOrder?.totalQuantity,
+      totalPrice: populatedOrder?.totalPrice,
+      totalPayablePrice: populatedOrder?.totalPayablePrice,
+      orderCode: uniqid(),
+      orderStatus: 'Not Processed',
+    };
+
+    logMiddleware('formatOrder');
+    next();
   } catch (error) {
     next(error);
   }
@@ -154,5 +189,6 @@ module.exports = {
   getOrder,
   deleteOrder,
   updateOrderStatus,
+  formatOrder,
   sendOrder,
 };
