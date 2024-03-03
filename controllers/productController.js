@@ -1,8 +1,8 @@
+const fs = require('fs');
+const slugify = require('slugify');
 const asynchandler = require('express-async-handler');
 const Product = require('../models/productModel');
 const User = require('../models/userModel');
-const slugify = require('slugify');
-const fs = require('fs');
 const { logMiddleware, isObjectIdValid } = require('../utils/Api-Features');
 const cloudinaryUploadImg = require('../utils/cloudinary');
 
@@ -117,13 +117,15 @@ const updateProduct = asynchandler(async (req, res, next) => {
       .populate('category', 'title')
       .populate('color', 'title')
       .exec();
+
     if (!updatedProduct) {
       res.status(404).send('Product Not Found');
     }
-    res.status(200).json({
-      id: updatedProduct._id,
-      message: 'Product Updated Successfully',
-    });
+
+    req.product = updatedProduct;
+
+    logMiddleware('updateProduct');
+    next();
   } catch (error) {
     next(error);
   }
