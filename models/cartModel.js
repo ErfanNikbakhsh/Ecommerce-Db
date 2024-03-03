@@ -22,7 +22,7 @@ const cartSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: 'User',
     },
-    totalQuantity: { type: Number, default: 1, min: 1 },
+    totalQuantity: { type: Number, default: 1 },
     totalPrice: Number,
     totalPayablePrice: Number,
   },
