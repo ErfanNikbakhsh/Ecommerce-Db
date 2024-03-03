@@ -53,4 +53,19 @@ const requestLimiter = rateLimit({
   // handler: (req, res, next, options) => res.status(options.statusCode).send(options.message),
 });
 
-module.exports = { logMiddleware, isObjectIdValid, hashToken, resizeAndSaveImage, requestLimiter };
+const calculateTotalPrice = (products) => {
+  const totalPrice =
+    Math.round(products.reduce((acc, product) => acc + product.price * product.quantity, 0) * 100) /
+    100;
+
+  return totalPrice;
+};
+
+module.exports = {
+  logMiddleware,
+  isObjectIdValid,
+  hashToken,
+  resizeAndSaveImage,
+  requestLimiter,
+  calculateTotalPrice,
+};
