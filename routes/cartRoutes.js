@@ -5,23 +5,21 @@ const {
   getCart,
   removeItemFromCart,
   updateCart,
-  clearCart,
   validateCoupon,
   updatePrice,
+  sendCart,
 } = require('../controllers/cartController');
 
 const router = express.Router();
 
-router.get('/get', auth, getCart);
+router.get('/get', auth, getCart, sendCart);
 
-router.post('/coupon', auth, validateCoupon, updatePrice);
+router.post('/coupon', auth, getCart, validateCoupon, updatePrice);
 
 router.post('/add/:productId', auth, addToCart);
 
 router.patch('/update/:productId', auth, updateCart);
 
 router.patch('/remove/:productId', auth, removeItemFromCart);
-
-router.delete('/clear', auth, clearCart);
 
 module.exports = router;
