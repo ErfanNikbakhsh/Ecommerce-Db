@@ -8,19 +8,19 @@ const orderSchema = new mongoose.Schema(
           type: mongoose.Types.ObjectId,
           ref: 'Product',
         },
-        quantity: Number,
+        quantity: { type: Number, min: 1 },
         color: {
           type: mongoose.Types.ObjectId,
           ref: 'Color',
         },
-        price: Number,
-        buyPrice: Number,
+        price: { type: Number, required: true },
       },
     ],
     orderBy: {
       type: mongoose.Types.ObjectId,
       ref: 'User',
     },
+    totalQuantity: { type: Number, min: 1 },
     totalPrice: Number,
     totalPayablePrice: Number,
     orderStatus: {
