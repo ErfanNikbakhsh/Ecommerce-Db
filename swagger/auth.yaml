@@ -1,0 +1,868 @@
+{
+  'paths':
+    {
+      '/api/user/List':
+        {
+          'get':
+            {
+              'tags': ['auth'],
+              'description': 'Admin can get list of all users.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'array',
+                                  'items':
+                                    {
+                                      'type': 'object',
+                                      'properties':
+                                        {
+                                          'userId': { 'type': 'string', 'example': 'objectId' },
+                                          'firstName': { 'type': 'string', 'example': 'John' },
+                                          'lastName': { 'type': 'string', 'example': 'Doe' },
+                                          'email':
+                                            { 'type': 'string', 'example': 'test@gmail.com' },
+                                          'mobile': { 'type': 'string', 'example': '123456789' },
+                                          'addresses':
+                                            {
+                                              'type': 'array',
+                                              'items':
+                                                {
+                                                  'type': 'object',
+                                                  'properties':
+                                                    {
+                                                      'addressTitle':
+                                                        { 'type': 'string', 'example': 'Home' },
+                                                      'address':
+                                                        {
+                                                          'type': 'string',
+                                                          'example': '2025 M Street, NW, Washington, DC, 20036',
+                                                        },
+                                                      'postalCode':
+                                                        {
+                                                          'type': 'string',
+                                                          'example': '12456 25745',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                          'role': { 'type': 'string', 'example': 'user' },
+                                          'wishlist':
+                                            {
+                                              'type': 'array',
+                                              'items':
+                                                {
+                                                  'type': 'object',
+                                                  'properties':
+                                                    {
+                                                      'productId':
+                                                        { 'type': 'string', 'example': 'objectId' },
+                                                      'title':
+                                                        {
+                                                          'type': 'string',
+                                                          'example': 'Iphone 14',
+                                                        },
+                                                      'description':
+                                                        {
+                                                          'type': 'string',
+                                                          'example': 'a smart phone!',
+                                                        },
+                                                      'price':
+                                                        { 'type': 'string', 'example': '1100' },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/refreshToken':
+        {
+          'get':
+            {
+              'tags': ['auth'],
+              'description': 'Users can renew their expired access token.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'access':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXCVI9',
+                                        },
+                                      'refresh':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJ1c2VySWQiOiI2NWNmMzYyMDExMTk0YTgw',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/wishlist':
+        {
+          'get':
+            {
+              'tags': ['auth'],
+              'description': 'Users can add items to their wishlist.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'array',
+                                  'items':
+                                    {
+                                      'type': 'object',
+                                      'properties':
+                                        {
+                                          'wishlist':
+                                            {
+                                              'type': 'array',
+                                              'items':
+                                                {
+                                                  'type': 'object',
+                                                  'properties':
+                                                    {
+                                                      'productId':
+                                                        { 'type': 'string', 'example': 'objectId' },
+                                                      'title':
+                                                        {
+                                                          'type': 'string',
+                                                          'example': 'Iphone 14',
+                                                        },
+                                                      'description':
+                                                        {
+                                                          'type': 'string',
+                                                          'example': 'a smart phone!',
+                                                        },
+                                                      'price':
+                                                        { 'type': 'string', 'example': '1100' },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/validateResetToken/{token}':
+        {
+          'get':
+            {
+              'tags': ['auth'],
+              'parameters':
+                [
+                  {
+                    'name': 'token',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'description': 'Validate reset token before loading the reset password page.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            { 'schema': { { 'type': 'string', example:'Token is valid' } } },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/{id}':
+        {
+          'get':
+            {
+              'tags': ['auth'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can get the info of a specific user.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'userId': { 'type': 'string', 'example': 'objectId' },
+                                      'firstName': { 'type': 'string', 'example': 'John' },
+                                      'lastName': { 'type': 'string', 'example': 'Doe' },
+                                      'email': { 'type': 'string', 'example': 'test@gmail.com' },
+                                      'mobile': { 'type': 'string', 'example': '123456789' },
+                                      'addresses':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'addressTitle':
+                                                    { 'type': 'string', 'example': 'Home' },
+                                                  'address':
+                                                    {
+                                                      'type': 'string',
+                                                      'example': '2025 M Street, NW, Washington, DC, 20036',
+                                                    },
+                                                  'postalCode':
+                                                    { 'type': 'string', 'example': '12456 25745' },
+                                                },
+                                            },
+                                        },
+                                      'role': { 'type': 'string', 'example': 'user' },
+                                      'wishlist':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'title':
+                                                    { 'type': 'string', 'example': 'Iphone 14' },
+                                                  'description':
+                                                    {
+                                                      'type': 'string',
+                                                      'example': 'a smart phone!',
+                                                    },
+                                                  'price': { 'type': 'string', 'example': '1100' },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/register':
+        {
+          'post':
+            {
+              'tags': ['auth'],
+              'description': 'Users can register with this endpoint.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type',
+                              'properties':
+                                { 'email': { 'type': 'string', 'example': 'test@gmail.com' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '201':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'id': { 'type': 'string', 'example': 'objectId' },
+                                      'firstName': { 'type': 'string', 'example': 'John' },
+                                      'lastName': { 'type': 'string', 'example': 'Doe' },
+                                      'email': { 'type': 'string', 'example': 'test@gmail.com' },
+                                      'mobile': { 'type': 'string', 'example': '123456789' },
+                                      'access':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXCVI9',
+                                        },
+                                      'refresh':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJ1c2VySWQiOiI2NWNmMzYyMDExMTk0YTgw',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/login':
+        {
+          'post':
+            {
+              'tags': ['auth'],
+              'description': 'Login endpoint for users.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type',
+                              'properties':
+                                {
+                                  'email': { 'type': 'string', 'example': 'test@gmail.com' },
+                                  'password': { 'type': 'string', 'example': '1234' },
+                                },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'id': { 'type': 'string', 'example': 'objectId' },
+                                      'firstName': { 'type': 'string', 'example': 'John' },
+                                      'lastName': { 'type': 'string', 'example': 'Doe' },
+                                      'email': { 'type': 'string', 'example': 'test@gmail.com' },
+                                      'mobile': { 'type': 'string', 'example': '123456789' },
+                                      'access':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXCVI9',
+                                        },
+                                      'refresh':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJ1c2VySWQiOiI2NWNmMzYyMDExMTk0YTgw',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/adminLogin':
+        {
+          'post':
+            {
+              'tags': ['auth'],
+              'description': 'Login endpoint for admins.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type',
+                              'properties':
+                                {
+                                  'email': { 'type': 'string', 'example': 'test@gmail.com' },
+                                  'password': { 'type': 'string', 'example': '1234' },
+                                },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'id': { 'type': 'string', 'example': 'objectId' },
+                                      'firstName': { 'type': 'string', 'example': 'John' },
+                                      'lastName': { 'type': 'string', 'example': 'Doe' },
+                                      'email': { 'type': 'string', 'example': 'test@gmail.com' },
+                                      'mobile': { 'type': 'string', 'example': '123456789' },
+                                      'access':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXCVI9',
+                                        },
+                                      'refresh':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJ1c2VySWQiOiI2NWNmMzYyMDExMTk0YTgw',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/forgotPassword':
+        {
+          'post':
+            {
+              'tags': ['auth'],
+              'description': 'Users can send an email to reset their password.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type',
+                              'properties':
+                                { 'email': { 'type': 'string', 'example': 'test@gmail.com' } },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  {
+                                    'type': 'string',
+                                    example:'Password reset link sent to the user's email',
+                                  },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/logout':
+        {
+          'post':
+            {
+              'tags': ['auth'],
+              'description': 'User logout endpoint.',
+              'responses': { '204': {} },
+            },
+        },
+
+      '/api/user/edit':
+        {
+          'patch':
+            {
+              'tags': ['auth'],
+              'description': 'Users can edit their information.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'firstName': { 'type': 'string', 'example': 'John' },
+                                  'lastName': { 'type': 'string', 'example': 'Doe' },
+                                  'mobile': { 'type': 'string', 'example': '123456789' },
+                                  'addresses':
+                                    {
+                                      'type': 'array',
+                                      'items':
+                                        {
+                                          'type': 'object',
+                                          'properties':
+                                            {
+                                              'addressTitle':
+                                                { 'type': 'string', 'example': 'Home' },
+                                              'address':
+                                                {
+                                                  'type': 'string',
+                                                  'example': '2025 M Street, NW, Washington, DC, 20036',
+                                                },
+                                              'postalCode':
+                                                { 'type': 'string', 'example': '12456 25745' },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'userId': { 'type': 'string', 'example': 'objectId' },
+                                      'firstName': { 'type': 'string', 'example': 'John' },
+                                      'lastName': { 'type': 'string', 'example': 'Doe' },
+                                      'email': { 'type': 'string', 'example': 'test@gmail.com' },
+                                      'mobile': { 'type': 'string', 'example': '123456789' },
+                                      'addresses':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'addressTitle':
+                                                    { 'type': 'string', 'example': 'Home' },
+                                                  'address':
+                                                    {
+                                                      'type': 'string',
+                                                      'example': '2025 M Street, NW, Washington, DC, 20036',
+                                                    },
+                                                  'postalCode':
+                                                    { 'type': 'string', 'example': '12456 25745' },
+                                                },
+                                            },
+                                        },
+                                      'role': { 'type': 'string', 'example': 'user' },
+                                      'wishlist':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'title':
+                                                    { 'type': 'string', 'example': 'Iphone 14' },
+                                                  'description':
+                                                    {
+                                                      'type': 'string',
+                                                      'example': 'a smart phone!',
+                                                    },
+                                                  'price': { 'type': 'string', 'example': '1100' },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/delete':
+        {
+          'patch':
+            {
+              'tags': ['auth'],
+              'description': 'Users can delete their account.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  {
+                                    'id': { 'type': 'string', 'example': 'objectId' },
+                                    'message':
+                                      { 'type': 'string', 'example': 'User Deleted Successfully' },
+                                  },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/changePassword':
+        {
+          'patch':
+            {
+              'tags': ['auth'],
+              'description': 'Authenticated users can change their password.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type',
+                              'properties':
+                                {
+                                  'oldPass': { 'type': 'string', 'example': '123' },
+                                  'newPass': { 'type': 'string', 'example': '12345' },
+                                  'confirmNewPass': { 'type': 'string', 'example': '12345' },
+                                },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type',
+                                  'properties':
+                                    {
+                                      'message':
+                                        {
+                                          'type': 'string',
+                                          'example': 'Password updated successfully',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/resetPassword/{token}':
+        {
+          'patch':
+            {
+              'tags': ['auth'],
+              'parameters':
+                [
+                  {
+                    'name': 'token',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'description': 'Users can reset their password.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type',
+                              'properties':
+                                {
+                                  'newPass': { 'type': 'string', 'example': '12345' },
+                                  'confirmNewPass': { 'type': 'string', 'example': '12345' },
+                                },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'id': { 'type': 'string', 'example': 'objectId' },
+                                      'firstName': { 'type': 'string', 'example': 'John' },
+                                      'lastName': { 'type': 'string', 'example': 'Doe' },
+                                      'email': { 'type': 'string', 'example': 'test@gmail.com' },
+                                      'mobile': { 'type': 'string', 'example': '123456789' },
+                                      'access':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXCVI9',
+                                        },
+                                      'refresh':
+                                        {
+                                          'type': 'string',
+                                          'example': 'eyJ1c2VySWQiOiI2NWNmMzYyMDExMTk0YTgw',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/blockUser/{id}':
+        {
+          'patch':
+            {
+              'tags': ['auth'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can Block a user.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'id': { 'type': 'string', 'example': 'objectId' },
+                                      'message':
+                                        {
+                                          'type': 'string',
+                                          'example': 'User Blocked Successfully',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/user/unBlockUser/{id}':
+        {
+          'patch':
+            {
+              'tags': ['auth'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can unBlock a user.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'id': { 'type': 'string', 'example': 'objectId' },
+                                      'message':
+                                        {
+                                          'type': 'string',
+                                          'example': 'User UnBlocked Successfully',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
