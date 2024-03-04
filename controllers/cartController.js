@@ -213,7 +213,7 @@ const validateCoupon = asynchandler(async (req, res, next) => {
 
     const coupon = await Coupon.findOne({ code: couponCode });
 
-    if (!coupon) throw new Error('Coupon not found');
+    if (!coupon) throw new Error('Coupon is not valid!');
 
     // Check if the coupon is expired
     if (coupon.expiry < new Date()) throw new Error('Coupon has expired!');
