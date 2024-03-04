@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const swaggerUi = require('swagger-ui-express');
 
 const dbConnect = require('./config/dbConnect');
 const authRoutes = require('./routes/authRoutes');
@@ -17,6 +18,7 @@ const cartRoutes = require('./routes/cartRoutes');
 const colorRoutes = require('./routes/colorRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const { errorHandler, notFound } = require('./middlewares/errorHandler');
+const { swaggerDocs, options } = require('./config/swaggerConfig');
 
 const PORT = process.env.PORT || 4000;
 dbConnect();
@@ -36,6 +38,8 @@ app.use('/api/coupon', couponRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/color', colorRoutes);
 app.use('/api/order', orderRoutes);
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs, options));
 
 app.use(notFound);
 app.use(errorHandler);
