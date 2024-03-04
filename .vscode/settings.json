@@ -6,6 +6,7 @@
     "Ecommerce",
     "fieldname",
     "softdelete",
+    "uniqid",
     "virtuals"
   ]
 }
