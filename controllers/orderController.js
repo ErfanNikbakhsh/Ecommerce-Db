@@ -2,6 +2,7 @@ const asynchandler = require('express-async-handler');
 const uniqid = require('uniqid');
 const { logMiddleware, isObjectIdValid } = require('../utils/Api-Features');
 const Order = require('../models/orderModel');
+const Product = require('../models/productModel');
 
 const getOrder = asynchandler(async (req, res, next) => {
   try {
@@ -90,6 +91,18 @@ const createOrder = async (req, res, next) => {
     });
 
     await order.save();
+
+    // Updating the sold & quantity fields for products in shopping cart
+    let update = cart.products.map((item) => {
+      return {
+        updateOne: {
+          filter: { _id: item.productId._id },
+          update: { $inc: { quantity: -item.quantity, sold: +item.quantity } },
+        },
+      };
+    });
+
+    await Product.bulkWrite(update, {});
 
     req.order = order;
 
