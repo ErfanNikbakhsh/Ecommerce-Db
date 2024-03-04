@@ -8,7 +8,6 @@ const {
   resetPassword,
   validateResetToken,
   updatePassword,
-  applyRequestLimiter,
 } = require('../middlewares/authMiddleware');
 
 const {
