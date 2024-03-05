@@ -1,0 +1,170 @@
+{
+  'paths':
+    {
+      '/api/brand/List':
+        {
+          'get':
+            {
+              'tags': ['brand'],
+              'description': 'Admin can get the list of all brands.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'array',
+                                  'items':
+                                    {
+                                      'type': 'object',
+                                      'properties':
+                                        {
+                                          'brandId': { 'type': 'string', 'example': 'objectId' },
+                                          'title': { 'type': 'string', 'example': 'Apple' },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/brand/{id}':
+        {
+          'get':
+            {
+              'tags': ['brand'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can get the info of a specific brand.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'brandId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'Apple' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+
+          'patch':
+            {
+              'tags': ['brand'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can edit a brand.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties': { 'title': { 'type': 'string', 'example': 'Apple' } },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'brandId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'Apple' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/brand/':
+        {
+          'post':
+            {
+              'tags': ['brand'],
+              'description': 'Admin can create a brand.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties': { 'title': { 'type': 'string', 'example': 'Apple' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '201':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'brandId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'Apple' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/brand/delete/{id}':
+        {
+          'patch':
+            {
+              'tags': ['brand'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can delete a brand.',
+              'responses': { '204': {} },
+            },
+        },
+    },
+}
