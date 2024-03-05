@@ -106,7 +106,6 @@
                               'type': 'object',
                               'properties':
                                 {
-                                  'expiry': { 'type': 'number', 'example': '2' },
                                   'discountType': { 'type': 'string', 'example': 'fixed' },
                                   'discountAmount': { 'type': 'number', 'example': '100' },
                                   'usageLimit': { 'type': 'number', 'example': '3' },

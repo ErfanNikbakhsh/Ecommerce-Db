@@ -211,6 +211,8 @@
           'patch':
             {
               'tags': ['product'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
               'description': 'Admin can edit a product.',
               'requestBody':
                 {
@@ -268,11 +270,76 @@
                                   'properties':
                                     {
                                       'productId': { 'type': 'string', 'example': 'objectId' },
-                                      'message':
+                                      'title': { 'type': 'string', 'example': 'iphone 13' },
+                                      'slug': { 'type': 'string', 'example': 'string' },
+                                      'description': { 'type': 'string', 'example': 'string' },
+                                      'price': { 'type': 'number', 'example': '200' },
+                                      'images':
                                         {
-                                          'type': 'string',
-                                          'example': 'Product rated successfully',
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'publicId':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'url': { 'type': 'string', 'example': 'string' },
+                                                  '_id':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                },
+                                            },
                                         },
+                                      'brand':
+                                        {
+                                          'type': 'object',
+                                          'properties':
+                                            {
+                                              '_id': { 'type': 'string', 'example': 'objectId' },
+                                              'title': { 'type': 'string', 'example': 'Apple' },
+                                            },
+                                        },
+                                      'category':
+                                        {
+                                          'type': 'object',
+                                          'properties':
+                                            {
+                                              '_id': { 'type': 'string', 'example': 'objectId' },
+                                              'title':
+                                                { 'type': 'string', 'example': 'smart phones' },
+                                            },
+                                        },
+                                      'color':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  '_id':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'title': { 'type': 'string', 'example': 'Black' },
+                                                },
+                                            },
+                                        },
+                                      'ratings':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'postedBy':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'star': { 'type': 'number', 'example': '4' },
+                                                  'comment':
+                                                    { 'type': 'string', 'example': 'string' },
+                                                },
+                                            },
+                                        },
+                                      'totalRating': { 'type': 'string', 'example': '4.5' },
                                     },
                                 },
                             },

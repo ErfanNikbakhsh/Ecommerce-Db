@@ -20,7 +20,7 @@
                                   'type': 'object',
                                   'properties':
                                     {
-                                      'cartId': { 'type': 'string', 'example': 'objectId' },
+                                      '_id': { 'type': 'string', 'example': 'objectId' },
                                       'products':
                                         {
                                           'type': 'array',
@@ -111,8 +111,6 @@
           'post':
             {
               'tags': ['cart'],
-              'parameters':
-                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
               'description': 'Users can apply their coupon to reduce the total price of their cart.',
               'requestBody':
                 {
@@ -142,7 +140,7 @@
                                   'type': 'object',
                                   'properties':
                                     {
-                                      'cartId': { 'type': 'string', 'example': 'objectId' },
+                                      '_id': { 'type': 'string', 'example': 'objectId' },
                                       'products':
                                         {
                                           'type': 'array',
@@ -322,7 +320,7 @@
                     'schema': { 'type': 'string' },
                   },
                 ],
-              'description': 'Users can reduce the number of products in their shopping cart.',
+              'description': 'Users can reduce the number of their products in their shopping cart.',
               'requestBody':
                 {
                   'content':
@@ -402,7 +400,7 @@
                     'schema': { 'type': 'string' },
                   },
                 ],
-              'description': 'Users can reduce the number of products in their shopping cart.',
+              'description': 'Users can remove products from their shopping cart.',
               'requestBody':
                 {
                   'content':

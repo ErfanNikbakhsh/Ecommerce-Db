@@ -6,7 +6,7 @@
           'get':
             {
               'tags': ['auth'],
-              'description': 'Admin can get list of all users.',
+              'description': 'Admin can get a list of all users.',
               'responses':
                 {
                   '200':
@@ -49,6 +49,8 @@
                                                           'type': 'string',
                                                           'example': '12456 25745',
                                                         },
+                                                      '_id':
+                                                        { 'type': 'string', 'example': 'objectId' },
                                                     },
                                                 },
                                             },
@@ -93,7 +95,7 @@
           'get':
             {
               'tags': ['auth'],
-              'description': 'Users can renew their expired access token.',
+              'description': 'Users can renew their expired access token.(this will not work in swagger because we should pass the refresh token in the cookie)',
               'responses':
                 {
                   '200':
@@ -131,7 +133,7 @@
           'get':
             {
               'tags': ['auth'],
-              'description': 'Users can add items to their wishlist.',
+              'description': 'Users can view their wishlist.',
               'responses':
                 {
                   '200':
@@ -148,31 +150,11 @@
                                       'type': 'object',
                                       'properties':
                                         {
-                                          'wishlist':
-                                            {
-                                              'type': 'array',
-                                              'items':
-                                                {
-                                                  'type': 'object',
-                                                  'properties':
-                                                    {
-                                                      'productId':
-                                                        { 'type': 'string', 'example': 'objectId' },
-                                                      'title':
-                                                        {
-                                                          'type': 'string',
-                                                          'example': 'Iphone 14',
-                                                        },
-                                                      'description':
-                                                        {
-                                                          'type': 'string',
-                                                          'example': 'a smart phone!',
-                                                        },
-                                                      'price':
-                                                        { 'type': 'string', 'example': '1100' },
-                                                    },
-                                                },
-                                            },
+                                          'productId': { 'type': 'string', 'example': 'objectId' },
+                                          'title': { 'type': 'string', 'example': 'Iphone 14' },
+                                          'description':
+                                            { 'type': 'string', 'example': 'a smart phone!' },
+                                          'price': { 'type': 'string', 'example': '1100' },
                                         },
                                     },
                                 },
@@ -205,7 +187,7 @@
                       'content':
                         {
                           'application/json':
-                            { 'schema': { { 'type': 'string', example:'Token is valid' } } },
+                            { 'schema': { 'type': 'string', 'example': 'Token is valid' } },
                         },
                     },
                 },
@@ -491,7 +473,7 @@
                         {
                           'schema':
                             {
-                              'type',
+                              'type': 'object',
                               'properties':
                                 { 'email': { 'type': 'string', 'example': 'test@gmail.com' } },
                             },
@@ -509,10 +491,8 @@
                             {
                               'schema':
                                 {
-                                  {
-                                    'type': 'string',
-                                    example:'Password reset link sent to the user's email',
-                                  },
+                                  'type': 'string',
+                                  'example': "Password reset link sent to the user's email",
                                 },
                             },
                         },
@@ -526,7 +506,7 @@
           'post':
             {
               'tags': ['auth'],
-              'description': 'User logout endpoint.',
+              'description': 'User logout endpoint.(this will not work in swagger because we should pass the refresh token in the cookie)',
               'responses': { '204': {} },
             },
         },
@@ -662,11 +642,16 @@
                             {
                               'schema':
                                 {
-                                  {
-                                    'id': { 'type': 'string', 'example': 'objectId' },
-                                    'message':
-                                      { 'type': 'string', 'example': 'User Deleted Successfully' },
-                                  },
+                                  'type',
+                                  'properties':
+                                    {
+                                      'id': { 'type': 'string', 'example': 'objectId' },
+                                      'message':
+                                        {
+                                          'type': 'string',
+                                          'example': 'User Deleted Successfully',
+                                        },
+                                    },
                                 },
                             },
                         },

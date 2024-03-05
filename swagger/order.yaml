@@ -256,7 +256,7 @@
             },
         },
 
-      '/api/cart/updateStatus/{orderId}':
+      '/api/order/updateStatus/{orderId}':
         {
           'patch':
             {
@@ -299,7 +299,7 @@
                                   'type': 'object',
                                   'properties':
                                     {
-                                      '_id': { 'type': 'string', 'example': 'objectId' },
+                                      'orderId': { 'type': 'string', 'example': 'objectId' },
                                       'products':
                                         {
                                           'type': 'array',
@@ -310,23 +310,48 @@
                                                 {
                                                   'productId':
                                                     { 'type': 'string', 'example': 'objectId' },
+                                                  'title':
+                                                    { 'type': 'string', 'example': 'string' },
+                                                  'images':
+                                                    {
+                                                      'type': 'array',
+                                                      'items':
+                                                        {
+                                                          'type': 'object',
+                                                          'properties':
+                                                            {
+                                                              'publicId':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'objectId',
+                                                                },
+                                                              'url':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'string',
+                                                                },
+                                                              '_id':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'objectId',
+                                                                },
+                                                            },
+                                                        },
+                                                    },
                                                   'quantity': { 'type': 'number', 'example': '2' },
                                                   'color':
                                                     { 'type': 'string', 'example': 'objectId' },
                                                   'price': { 'type': 'number', 'example': '200' },
-                                                  'addedAt':
-                                                    {
-                                                      'type': 'string',
-                                                      'format': 'date',
-                                                      'example': '2024-03-05T08:04:15.153+00:00',
-                                                    },
                                                 },
                                             },
                                         },
-                                      'user': { 'type': 'string', 'example': 'objectId' },
+                                      'orderBy': { 'type': 'string', 'example': 'objectId' },
                                       'totalQuantity': { 'type': 'number', 'example': '12' },
                                       'totalPrice': { 'type': 'number', 'example': '1000' },
                                       'totalPayablePrice': { 'type': 'number', 'example': '900' },
+                                      'orderCode': { 'type': 'string', 'example': 'string' },
+                                      'orderStatus':
+                                        { 'type': 'string', 'example': 'Not Processed' },
                                     },
                                 },
                             },
