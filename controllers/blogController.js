@@ -62,7 +62,6 @@ const getAllBlogs = asynchandler(async (req, res, next) => {
           totalViews: blog?.totalViews,
           isLiked: blog?.isLiked,
           isDisliked: blog?.isDisliked,
-          isDisliked: blog?.isDisliked,
           likes: blog?.likes,
           disLikes: blog?.disLikes,
           author: blog?.author,
@@ -82,11 +81,10 @@ const getAllBlogs = asynchandler(async (req, res, next) => {
 
 const createBlog = asynchandler(async (req, res, next) => {
   try {
-    const newBlog = await Blog.create(req.body)
-      .populate('category', 'title')
-      .populate('likes', 'firstName lastName')
-      .populate('disLikes', 'firstName lastName')
-      .exec();
+    const newBlog = await Blog.create(req.body);
+    await newBlog.populate('category', 'title');
+
+    console.log(newBlog.category);
 
     res.status(201).send({
       blogId: newBlog?._id,
@@ -191,6 +189,7 @@ const likeTheBlog = asynchandler(async (req, res, next) => {
       .exec();
 
     res.send({
+      blogId,
       isLiked: updatedBlog.isLiked,
       likes: updatedBlog.likes,
     });
@@ -231,6 +230,7 @@ const dislikeTheBlog = asynchandler(async (req, res, next) => {
       .exec();
 
     res.send({
+      blogId,
       isDisliked: updatedBlog.isDisliked,
       disLikes: updatedBlog.disLikes,
     });
@@ -245,8 +245,8 @@ const dislikeTheBlog = asynchandler(async (req, res, next) => {
 
 const checkBlogInteraction = asynchandler(async (req, res, next) => {
   try {
-    const loginUserId = req.body?.userId || req.user?._id;
-    const blogId = req.params?.id || req.body?.blogId;
+    const loginUserId = req.query?.userId || req.user?._id;
+    const blogId = req.params?.id || req.query?.blogId;
 
     isObjectIdValid(loginUserId);
     isObjectIdValid(blogId);
