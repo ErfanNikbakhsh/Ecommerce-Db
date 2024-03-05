@@ -77,7 +77,7 @@ const deleteColor = asynchandler(async (req, res, next) => {
 
     if (!deletedColor) throw new Error('Color Not Found!');
 
-    res.status(204).json({ deletedColor });
+    res.sendStatus(204);
   } catch (error) {
     next(error);
   }
