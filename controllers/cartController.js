@@ -47,7 +47,12 @@ const addToCart = asynchandler(async (req, res, next) => {
 
       const updatedCart = await cart.save();
 
-      return res.status(200).send(updatedCart);
+      let plainCart = updatedCart.toObject();
+      delete plainCart['createdAt'];
+      delete plainCart['updatedAt'];
+      delete plainCart['__v'];
+
+      return res.status(200).send(plainCart);
     } else {
       // Create a new cart with the product
       const newCart = await Cart.create({
@@ -64,7 +69,12 @@ const addToCart = asynchandler(async (req, res, next) => {
         totalPayablePrice: product.price,
       });
 
-      return res.status(201).send(newCart);
+      let plainCart = newCart.toObject();
+      delete plainCart['createdAt'];
+      delete plainCart['updatedAt'];
+      delete plainCart['__v'];
+
+      return res.status(201).send(plainCart);
     }
   } catch (error) {
     console.log(error);
@@ -147,7 +157,12 @@ const updateCart = asynchandler(async (req, res, next) => {
 
     await cart.save();
 
-    res.send(cart);
+    let plainCart = cart.toObject();
+    delete plainCart['createdAt'];
+    delete plainCart['updatedAt'];
+    delete plainCart['__v'];
+
+    return res.status(200).send(plainCart);
   } catch (error) {
     next(error);
   }
@@ -185,7 +200,12 @@ const removeItemFromCart = asynchandler(async (req, res, next) => {
 
     await cart.save();
 
-    res.send(cart);
+    let plainCart = cart.toObject();
+    delete plainCart['createdAt'];
+    delete plainCart['updatedAt'];
+    delete plainCart['__v'];
+
+    return res.status(200).send(plainCart);
   } catch (error) {
     next(error);
   }
@@ -260,7 +280,12 @@ const updatePrice = asynchandler(async (req, res, next) => {
 
     // expire and increment the coupon currentUsage by one when the purchase was successful.
 
-    res.send(cart);
+    let plainCart = cart.toObject();
+    delete plainCart['createdAt'];
+    delete plainCart['updatedAt'];
+    delete plainCart['__v'];
+
+    res.send(plainCart);
   } catch (error) {
     next(error);
   }
@@ -268,7 +293,11 @@ const updatePrice = asynchandler(async (req, res, next) => {
 
 const sendCart = asynchandler(async (req, res, next) => {
   try {
-    const cart = req.cart;
+    const cart = req.cart.toObject();
+
+    delete cart['createdAt'];
+    delete cart['updatedAt'];
+    delete cart['__v'];
 
     res.send(cart);
   } catch (error) {
