@@ -138,9 +138,10 @@ const deleteProduct = asynchandler(async (req, res, next) => {
 
     const deletedProduct = await Product.findByIdAndUpdate(
       productId,
-      { softdelete: true },
+      { softDelete: true },
       { new: true }
     );
+
     if (!deletedProduct) {
       res.status(404).send('Product Not Found');
     }
