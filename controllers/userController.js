@@ -93,20 +93,32 @@ const adminLogin = asynchandler(async (req, res, next) => {
 
 const userLogout = asynchandler(async (req, res, next) => {
   try {
+    const loginUser = req.user;
+
     const enteredRefreshToken = req.cookies.refreshToken;
     if (!enteredRefreshToken) throw new Error('There Is No Refresh Token Attached!');
     const hashedRefToken = hashToken(enteredRefreshToken);
 
-    const user = await User.findOne({ 'refreshTokens.token': hashedRefToken }).exec();
+    const isRefreshValid = loginUser.refreshTokens.find((rf) => rf.token === hashedRefToken);
 
-    if (!user) return res.sendStatus(204);
+    if (isRefreshValid) {
+      // Delete refresh token in DB
+      const newRefTokenArray = loginUser.refreshTokens.filter((rt) => rt.token !== hashedRefToken);
+      loginUser.refreshTokens = newRefTokenArray;
 
-    // Delete refresh token in DB
-    const newRefTokenArray = user.refreshTokens.filter((rt) => rt.token !== hashedRefToken);
-    user.refreshTokens = newRefTokenArray;
-    await user.save();
+      await loginUser.save();
 
-    return res.sendStatus(204);
+      return res.sendStatus(204);
+    } else {
+      const user = await User.findOne({ 'refreshTokens.token': hashedRefToken }).exec();
+
+      loginUser.refreshTokens = [];
+      user.refreshTokens = [];
+
+      await loginUser.save();
+      await user.save();
+      res.sendStatus(204);
+    }
   } catch (error) {
     next(error);
   }
