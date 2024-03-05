@@ -179,7 +179,7 @@ const formatOrder = asynchandler(async (req, res, next) => {
       totalPrice: populatedOrder?.totalPrice,
       totalPayablePrice: populatedOrder?.totalPayablePrice,
       orderCode: uniqid(),
-      orderStatus: 'Not Processed',
+      orderStatus: populatedOrder.orderStatus,
     };
 
     logMiddleware('formatOrder');
