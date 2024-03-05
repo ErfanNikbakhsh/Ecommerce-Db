@@ -19,7 +19,7 @@ router.get('/:orderId', auth, getOrder);
 
 router.post('/', auth, getCart, createOrder, clearCart, formatOrder, sendOrder);
 
-router.patch('/updateStatus/:orderId', auth, isAdmin, updateOrderStatus);
+router.patch('/updateStatus/:orderId', auth, isAdmin, updateOrderStatus, formatOrder, sendOrder);
 
 router.patch('/delete/:orderId', auth, deleteOrder);
 
