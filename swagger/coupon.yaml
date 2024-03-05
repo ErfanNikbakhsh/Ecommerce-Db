@@ -1,0 +1,230 @@
+{
+  'paths':
+    {
+      '/api/coupon/List':
+        {
+          'get':
+            {
+              'tags': ['coupon'],
+              'description': 'Admin can get the list of all coupons.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'array',
+                                  'items':
+                                    {
+                                      'type': 'object',
+                                      'properties':
+                                        {
+                                          'couponId': { 'type': 'string', 'example': 'objectId' },
+                                          'code': { 'type': 'string', 'example': 'string' },
+                                          'expiry':
+                                            {
+                                              'type': 'string',
+                                              'format': 'date',
+                                              'example': '2024-03-05T08:04:15.153+00:00',
+                                            },
+                                          'discountType':
+                                            { 'type': 'string', 'example': 'percentage' },
+                                          'discountAmount': { 'type': 'number', 'example': '10' },
+                                          'usageLimit': { 'type': 'number', 'example': '5' },
+                                          'currentUsage': { 'type': 'number', 'example': '2' },
+                                          'minOrderAmount': { 'type': 'number', 'example': '250' },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/coupon/{id}':
+        {
+          'get':
+            {
+              'tags': ['coupon'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can get the info of a specific coupon.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'couponId': { 'type': 'string', 'example': 'objectId' },
+                                      'code': { 'type': 'string', 'example': 'string' },
+                                      'expiry':
+                                        {
+                                          'type': 'string',
+                                          'format': 'date',
+                                          'example': '2024-03-05T08:04:15.153+00:00',
+                                        },
+                                      'discountType': { 'type': 'string', 'example': 'percentage' },
+                                      'discountAmount': { 'type': 'number', 'example': '10' },
+                                      'usageLimit': { 'type': 'number', 'example': '5' },
+                                      'currentUsage': { 'type': 'number', 'example': '2' },
+                                      'minOrderAmount': { 'type': 'number', 'example': '250' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+
+          'patch':
+            {
+              'tags': ['coupon'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can edit a coupon.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'expiry': { 'type': 'number', 'example': '2' },
+                                  'discountType': { 'type': 'string', 'example': 'fixed' },
+                                  'discountAmount': { 'type': 'number', 'example': '100' },
+                                  'usageLimit': { 'type': 'number', 'example': '3' },
+                                  'currentUsage': { 'type': 'number', 'example': '2' },
+                                  'minOrderAmount': { 'type': 'number', 'example': '300' },
+                                },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'couponId': { 'type': 'string', 'example': 'objectId' },
+                                      'code': { 'type': 'string', 'example': 'string' },
+                                      'expiry':
+                                        {
+                                          'type': 'string',
+                                          'format': 'date',
+                                          'example': '2024-03-05T08:04:15.153+00:00',
+                                        },
+                                      'discountType': { 'type': 'string', 'example': 'percentage' },
+                                      'discountAmount': { 'type': 'number', 'example': '10' },
+                                      'usageLimit': { 'type': 'number', 'example': '5' },
+                                      'currentUsage': { 'type': 'number', 'example': '2' },
+                                      'minOrderAmount': { 'type': 'number', 'example': '250' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/coupon/':
+        {
+          'post':
+            {
+              'tags': ['coupon'],
+              'description': 'Admin can create a coupon.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                {
+                                  'expiry': { 'type': 'number', 'example': '2' },
+                                  'discountType': { 'type': 'string', 'example': 'fixed' },
+                                  'discountAmount': { 'type': 'number', 'example': '100' },
+                                  'usageLimit': { 'type': 'number', 'example': '3' },
+                                  'minOrderAmount': { 'type': 'number', 'example': '300' },
+                                },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '201':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'couponId': { 'type': 'string', 'example': 'objectId' },
+                                      'code': { 'type': 'string', 'example': 'string' },
+                                      'expiry':
+                                        {
+                                          'type': 'string',
+                                          'format': 'date',
+                                          'example': '2024-03-05T08:04:15.153+00:00',
+                                        },
+                                      'discountType': { 'type': 'string', 'example': 'percentage' },
+                                      'discountAmount': { 'type': 'number', 'example': '10' },
+                                      'usageLimit': { 'type': 'number', 'example': '5' },
+                                      'currentUsage': { 'type': 'number', 'example': '2' },
+                                      'minOrderAmount': { 'type': 'number', 'example': '250' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/coupon/delete/{id}':
+        {
+          'patch':
+            {
+              'tags': ['coupon'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can delete a coupon.',
+              'responses': { '204': {} },
+            },
+        },
+    },
+}
