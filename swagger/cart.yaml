@@ -1,0 +1,471 @@
+{
+  'paths':
+    {
+      '/api/cart/get':
+        {
+          'get':
+            {
+              'tags': ['cart'],
+              'description': 'Users can view their shopping cart.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'cartId': { 'type': 'string', 'example': 'objectId' },
+                                      'products':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    {
+                                                      'type': 'object',
+                                                      'properties':
+                                                        {
+                                                          '_id':
+                                                            {
+                                                              'type': 'string',
+                                                              'example': 'objectId',
+                                                            },
+                                                          'title':
+                                                            {
+                                                              'type': 'string',
+                                                              'example': 'abc bag',
+                                                            },
+                                                          'price':
+                                                            { 'type': 'number', 'example': '500' },
+                                                          'images':
+                                                            {
+                                                              'type': 'array',
+                                                              'items':
+                                                                {
+                                                                  'type': 'object',
+                                                                  'properties':
+                                                                    {
+                                                                      'publicId':
+                                                                        {
+                                                                          'type': 'string',
+                                                                          'example': 'objectId',
+                                                                        },
+                                                                      'url':
+                                                                        {
+                                                                          'type': 'string',
+                                                                          'example': 'string',
+                                                                        },
+                                                                      '_id':
+                                                                        {
+                                                                          'type': 'string',
+                                                                          'example': 'objectId',
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                          'updatedAt':
+                                                            {
+                                                              'type': 'string',
+                                                              'format': 'date',
+                                                              'example': 'objectId',
+                                                            },
+                                                        },
+                                                    },
+                                                  'quantity': { 'type': 'number', 'example': '3' },
+                                                  'color':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'price': { 'type': 'number', 'example': '500' },
+                                                  'addedAt':
+                                                    {
+                                                      'type': 'number',
+                                                      'format': 'date',
+                                                      'example': '2024-03-05T08:04:15.153+00:00',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                      'user': { 'type': 'string', 'example': 'objectId' },
+                                      'totalQuantity': { 'type': 'number', 'example': '12' },
+                                      'totalPrice': { 'type': 'number', 'example': '1000' },
+                                      'totalPayablePrice': { 'type': 'number', 'example': '900' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/cart/coupon':
+        {
+          'post':
+            {
+              'tags': ['cart'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Users can apply their coupon to reduce the total price of their cart.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                { 'couponCode': { 'type': 'string', 'example': 'string' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'cartId': { 'type': 'string', 'example': 'objectId' },
+                                      'products':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    {
+                                                      'type': 'object',
+                                                      'properties':
+                                                        {
+                                                          '_id':
+                                                            {
+                                                              'type': 'string',
+                                                              'example': 'objectId',
+                                                            },
+                                                          'title':
+                                                            {
+                                                              'type': 'string',
+                                                              'example': 'abc bag',
+                                                            },
+                                                          'price':
+                                                            { 'type': 'number', 'example': '500' },
+                                                          'images':
+                                                            {
+                                                              'type': 'array',
+                                                              'items':
+                                                                {
+                                                                  'type': 'object',
+                                                                  'properties':
+                                                                    {
+                                                                      'publicId':
+                                                                        {
+                                                                          'type': 'string',
+                                                                          'example': 'objectId',
+                                                                        },
+                                                                      'url':
+                                                                        {
+                                                                          'type': 'string',
+                                                                          'example': 'string',
+                                                                        },
+                                                                      '_id':
+                                                                        {
+                                                                          'type': 'string',
+                                                                          'example': 'objectId',
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                          'updatedAt':
+                                                            {
+                                                              'type': 'string',
+                                                              'format': 'date',
+                                                              'example': 'objectId',
+                                                            },
+                                                        },
+                                                    },
+                                                  'quantity': { 'type': 'number', 'example': '3' },
+                                                  'color':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'price': { 'type': 'number', 'example': '500' },
+                                                  'addedAt':
+                                                    {
+                                                      'type': 'number',
+                                                      'format': 'date',
+                                                      'example': '2024-03-05T08:04:15.153+00:00',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                      'user': { 'type': 'string', 'example': 'objectId' },
+                                      'totalQuantity': { 'type': 'number', 'example': '12' },
+                                      'totalPrice': { 'type': 'number', 'example': '1000' },
+                                      'totalPayablePrice': { 'type': 'number', 'example': '900' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/cart/add/{productId}':
+        {
+          'post':
+            {
+              'tags': ['cart'],
+              'parameters':
+                [
+                  {
+                    'name': 'productId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'description': 'Users can add products to their shopping cart.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                { 'colorId': { 'type': 'string', 'example': 'objectId' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      '_id': { 'type': 'string', 'example': 'objectId' },
+                                      'products':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'quantity': { 'type': 'number', 'example': '2' },
+                                                  'color':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'price': { 'type': 'number', 'example': '200' },
+                                                  'addedAt':
+                                                    {
+                                                      'type': 'string',
+                                                      'format': 'date',
+                                                      'example': '2024-03-05T08:04:15.153+00:00',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                      'user': { 'type': 'string', 'example': 'objectId' },
+                                      'totalQuantity': { 'type': 'number', 'example': '12' },
+                                      'totalPrice': { 'type': 'number', 'example': '1000' },
+                                      'totalPayablePrice': { 'type': 'number', 'example': '900' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/cart/update/{productId}':
+        {
+          'patch':
+            {
+              'tags': ['cart'],
+              'parameters':
+                [
+                  {
+                    'name': 'productId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'description': 'Users can reduce the number of products in their shopping cart.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                { 'colorId': { 'type': 'string', 'example': 'objectId' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      '_id': { 'type': 'string', 'example': 'objectId' },
+                                      'products':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'quantity': { 'type': 'number', 'example': '2' },
+                                                  'color':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'price': { 'type': 'number', 'example': '200' },
+                                                  'addedAt':
+                                                    {
+                                                      'type': 'string',
+                                                      'format': 'date',
+                                                      'example': '2024-03-05T08:04:15.153+00:00',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                      'user': { 'type': 'string', 'example': 'objectId' },
+                                      'totalQuantity': { 'type': 'number', 'example': '12' },
+                                      'totalPrice': { 'type': 'number', 'example': '1000' },
+                                      'totalPayablePrice': { 'type': 'number', 'example': '900' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/cart/remove/{productId}':
+        {
+          'patch':
+            {
+              'tags': ['cart'],
+              'parameters':
+                [
+                  {
+                    'name': 'productId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'description': 'Users can reduce the number of products in their shopping cart.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                { 'colorId': { 'type': 'string', 'example': 'objectId' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      '_id': { 'type': 'string', 'example': 'objectId' },
+                                      'products':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'quantity': { 'type': 'number', 'example': '2' },
+                                                  'color':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'price': { 'type': 'number', 'example': '200' },
+                                                  'addedAt':
+                                                    {
+                                                      'type': 'string',
+                                                      'format': 'date',
+                                                      'example': '2024-03-05T08:04:15.153+00:00',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                      'user': { 'type': 'string', 'example': 'objectId' },
+                                      'totalQuantity': { 'type': 'number', 'example': '12' },
+                                      'totalPrice': { 'type': 'number', 'example': '1000' },
+                                      'totalPayablePrice': { 'type': 'number', 'example': '900' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
