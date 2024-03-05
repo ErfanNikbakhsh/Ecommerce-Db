@@ -147,7 +147,9 @@ const updateOrderStatus = asynchandler(async (req, res, next) => {
 
     if (!updateOrderStatus) throw new Error('Order Not Found');
 
-    res.send(updateOrderStatus);
+    req.order = updateOrderStatus;
+    logMiddleware('updateOrderStatus');
+    next();
   } catch (error) {
     next(error);
   }
@@ -161,6 +163,7 @@ const formatOrder = asynchandler(async (req, res, next) => {
     const populatedOrder = await order.populate('products.productId', 'title _id images');
 
     req.order = {
+      orderId: order?._id,
       products: populatedOrder?.products?.map((product) => {
         return {
           productId: product?.productId._id,
@@ -190,7 +193,7 @@ const sendOrder = asynchandler(async (req, res, next) => {
   try {
     const order = req.order;
 
-    res.status(201).send(order);
+    res.status(200).send(order);
   } catch (error) {
     next(error);
   }
