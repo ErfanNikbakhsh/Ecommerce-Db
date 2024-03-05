@@ -303,9 +303,15 @@
                         {
                           'schema':
                             {
-                              'type',
+                              'type': 'object',
                               'properties':
-                                { 'email': { 'type': 'string', 'example': 'test@gmail.com' } },
+                                {
+                                  'firstName': { 'type': 'string', 'example': 'John' },
+                                  'lastName': { 'type': 'string', 'example': 'Doe' },
+                                  'email': { 'type': 'string', 'example': 'test@gmail.com' },
+                                  'mobile': { 'type': 'string', 'example': '123456789' },
+                                  'password': { 'type': 'string', 'example': '123' },
+                                },
                             },
                         },
                     },
