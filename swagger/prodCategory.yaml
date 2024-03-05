@@ -1,0 +1,172 @@
+{
+  'paths':
+    {
+      '/api/prodCategory/List':
+        {
+          'get':
+            {
+              'tags': ['product category'],
+              'description': 'Admin can get the list of all product categories.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'array',
+                                  'items':
+                                    {
+                                      'type': 'object',
+                                      'properties':
+                                        {
+                                          'categoryId': { 'type': 'string', 'example': 'objectId' },
+                                          'title': { 'type': 'string', 'example': 'smart phone' },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/prodCategory/{id}':
+        {
+          'get':
+            {
+              'tags': ['product category'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can get the info of a specific product category.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'categoryId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'smart phone' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+
+          'patch':
+            {
+              'tags': ['product category'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can edit a product category.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                { 'title': { 'type': 'string', 'example': 'smart phone' } },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'categoryId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'smart phone' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/prodCategory/':
+        {
+          'post':
+            {
+              'tags': ['product category'],
+              'description': 'Admin can create a product category.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                { 'title': { 'type': 'string', 'example': 'smart phone' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '201':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'categoryId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'smart phone' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/prodCategory/delete/{id}':
+        {
+          'patch':
+            {
+              'tags': ['product category'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can delete a product category.',
+              'responses': { '204': {} },
+            },
+        },
+    },
+}

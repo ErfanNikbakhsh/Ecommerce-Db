@@ -1,0 +1,121 @@
+<!-- email-template.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f4; /* Light gray background */
+        color: #333;
+        margin: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff; /* White container background */
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #007bff; /* Blue heading color */
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      p {
+        line-height: 1.6;
+        margin-bottom: 10px;
+      }
+
+      a {
+        color: #007bff; /* Blue link color */
+        text-decoration: none;
+      }
+
+      .button-container {
+        text-align: center;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 15px 30px;
+        font-size: 16px;
+        background-color: #007bff; /* Blue button color */
+        color: #ffffff !important; /* Button text color */
+        text-decoration: none;
+        border-radius: 8px;
+        margin-top: 20px;
+      }
+
+      .details {
+        background-color: #f0f0f0; /* Lighter gray background for details section */
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      li {
+        margin-bottom: 10px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      li::before {
+        color: #007bff;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+      }
+
+      .logo {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .logo img {
+        max-width: 150px; /* Reduced size of the logo */
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img
+          src="https://digitic.co/wp-content/uploads/2023/01/Digitic-black-logo450x350.png"
+          alt="Digitic Logo"
+        />
+      </div>
+      <h1>Password Change Request</h1>
+      <p>Hello,</p>
+      <p>
+        We have received a password reset request. Please use the below button to reset your
+        password:
+      </p>
+      <div class="button-container">
+        <a class="button" href="{{resetUrl}}">Reset Password</a>
+      </div>
+      <p>This reset password link will be valid only for 10 minutes.</p>
+      <div class="details">
+        <p><strong>Additional Details:</strong></p>
+        <ul>
+          <li>- Ensure your password is strong and unique.</li>
+          <li>- Contact support if you did not initiate this request.</li>
+        </ul>
+      </div>
+      <p>Best regards,<br />Digitic's Support Team</p>
+    </div>
+  </body>
+</html>

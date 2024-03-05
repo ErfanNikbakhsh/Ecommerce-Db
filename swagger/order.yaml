@@ -1,0 +1,383 @@
+{
+  'paths':
+    {
+      '/api/order/List':
+        {
+          'get':
+            {
+              'tags': ['order'],
+              'description': 'Users can get all of their orders.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'array',
+                                  'items':
+                                    {
+                                      'type': 'object',
+                                      'properties':
+                                        {
+                                          'orderId': { 'type': 'string', 'example': 'objectId' },
+                                          'products':
+                                            {
+                                              'type': 'array',
+                                              'items':
+                                                {
+                                                  'type': 'object',
+                                                  'properties':
+                                                    {
+                                                      'productId':
+                                                        { 'type': 'string', 'example': 'objectId' },
+                                                      'title':
+                                                        { 'type': 'string', 'example': 'string' },
+                                                      'images':
+                                                        {
+                                                          'type': 'array',
+                                                          'items':
+                                                            {
+                                                              'type': 'object',
+                                                              'properties':
+                                                                {
+                                                                  'publicId':
+                                                                    {
+                                                                      'type': 'string',
+                                                                      'example': 'objectId',
+                                                                    },
+                                                                  'url':
+                                                                    {
+                                                                      'type': 'string',
+                                                                      'example': 'string',
+                                                                    },
+                                                                  '_id':
+                                                                    {
+                                                                      'type': 'string',
+                                                                      'example': 'objectId',
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                      'quantity':
+                                                        { 'type': 'number', 'example': '2' },
+                                                      'color':
+                                                        { 'type': 'string', 'example': 'objectId' },
+                                                      'price':
+                                                        { 'type': 'number', 'example': '200' },
+                                                    },
+                                                },
+                                            },
+                                          'totalQuantity': { 'type': 'number', 'example': '12' },
+                                          'totalPrice': { 'type': 'number', 'example': '1000' },
+                                          'totalPayablePrice':
+                                            { 'type': 'number', 'example': '900' },
+                                          'orderStatus':
+                                            { 'type': 'string', 'example': 'Not Processed' },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/order/{orderId}':
+        {
+          'get':
+            {
+              'tags': ['order'],
+              'parameters':
+                [
+                  {
+                    'name': 'orderId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'description': 'Users can get the info of a specific order.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'orderId': { 'type': 'string', 'example': 'objectId' },
+                                      'products':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'title':
+                                                    { 'type': 'string', 'example': 'string' },
+                                                  'images':
+                                                    {
+                                                      'type': 'array',
+                                                      'items':
+                                                        {
+                                                          'type': 'object',
+                                                          'properties':
+                                                            {
+                                                              'publicId':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'objectId',
+                                                                },
+                                                              'url':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'string',
+                                                                },
+                                                              '_id':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'objectId',
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                  'quantity': { 'type': 'number', 'example': '2' },
+                                                  'color':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'price': { 'type': 'number', 'example': '200' },
+                                                },
+                                            },
+                                        },
+                                      'totalQuantity': { 'type': 'number', 'example': '12' },
+                                      'totalPrice': { 'type': 'number', 'example': '1000' },
+                                      'totalPayablePrice': { 'type': 'number', 'example': '900' },
+                                      'orderStatus':
+                                        { 'type': 'string', 'example': 'Not Processed' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/order/':
+        {
+          'post':
+            {
+              'tags': ['order'],
+              'description': 'Users can create an order.',
+              'responses':
+                {
+                  '201':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'orderId': { 'type': 'string', 'example': 'objectId' },
+                                      'products':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'title':
+                                                    { 'type': 'string', 'example': 'string' },
+                                                  'images':
+                                                    {
+                                                      'type': 'array',
+                                                      'items':
+                                                        {
+                                                          'type': 'object',
+                                                          'properties':
+                                                            {
+                                                              'publicId':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'objectId',
+                                                                },
+                                                              'url':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'string',
+                                                                },
+                                                              '_id':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'objectId',
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                  'quantity': { 'type': 'number', 'example': '2' },
+                                                  'color':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'price': { 'type': 'number', 'example': '200' },
+                                                },
+                                            },
+                                        },
+                                      'orderBy': { 'type': 'string', 'example': 'objectId' },
+                                      'totalQuantity': { 'type': 'number', 'example': '12' },
+                                      'totalPrice': { 'type': 'number', 'example': '1000' },
+                                      'totalPayablePrice': { 'type': 'number', 'example': '900' },
+                                      'orderCode': { 'type': 'string', 'example': 'string' },
+                                      'orderStatus':
+                                        { 'type': 'string', 'example': 'Not Processed' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/order/updateStatus/{orderId}':
+        {
+          'patch':
+            {
+              'tags': ['order'],
+              'parameters':
+                [
+                  {
+                    'name': 'orderId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'description': 'Admin can update the status of an order.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                { 'status': { 'type': 'string', 'example': 'Cancelled' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'orderId': { 'type': 'string', 'example': 'objectId' },
+                                      'products':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              'type': 'object',
+                                              'properties':
+                                                {
+                                                  'productId':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'title':
+                                                    { 'type': 'string', 'example': 'string' },
+                                                  'images':
+                                                    {
+                                                      'type': 'array',
+                                                      'items':
+                                                        {
+                                                          'type': 'object',
+                                                          'properties':
+                                                            {
+                                                              'publicId':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'objectId',
+                                                                },
+                                                              'url':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'string',
+                                                                },
+                                                              '_id':
+                                                                {
+                                                                  'type': 'string',
+                                                                  'example': 'objectId',
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                  'quantity': { 'type': 'number', 'example': '2' },
+                                                  'color':
+                                                    { 'type': 'string', 'example': 'objectId' },
+                                                  'price': { 'type': 'number', 'example': '200' },
+                                                },
+                                            },
+                                        },
+                                      'orderBy': { 'type': 'string', 'example': 'objectId' },
+                                      'totalQuantity': { 'type': 'number', 'example': '12' },
+                                      'totalPrice': { 'type': 'number', 'example': '1000' },
+                                      'totalPayablePrice': { 'type': 'number', 'example': '900' },
+                                      'orderCode': { 'type': 'string', 'example': 'string' },
+                                      'orderStatus':
+                                        { 'type': 'string', 'example': 'Not Processed' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/order/delete/{orderId}':
+        {
+          'patch':
+            {
+              'tags': ['order'],
+              'parameters':
+                [
+                  {
+                    'name': 'orderId',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
+              'description': 'Users can delete their order.',
+              'responses': { '204': {} },
+            },
+        },
+    },
+}

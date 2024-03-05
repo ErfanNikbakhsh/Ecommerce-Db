@@ -1,0 +1,167 @@
+{
+  'paths':
+    {
+      '/api/color/List':
+        {
+          'get':
+            {
+              'tags': ['color'],
+              'description': 'Admin can get the list of all colors.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'array',
+                                  'items':
+                                    {
+                                      'type': 'object',
+                                      'properties':
+                                        {
+                                          'colorId': { 'type': 'string', 'example': 'objectId' },
+                                          'title': { 'type': 'string', 'example': 'Red' },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/color/{id}':
+        {
+          'get':
+            {
+              'tags': ['color'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can get the info of a specific color.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'colorId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'Red' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+
+          'patch':
+            {
+              'tags': ['color'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can edit a color.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties': { 'title': { 'type': 'string', 'example': 'Red' } },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'colorId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'Red' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+
+          'delete':
+            {
+              'tags': ['color'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can delete a color.',
+              'responses': { '204': {} },
+            },
+        },
+
+      '/api/color/':
+        {
+          'post':
+            {
+              'tags': ['color'],
+              'description': 'Admin can create a color.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties': { 'title': { 'type': 'string', 'example': 'Red' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '201':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'colorId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'Red' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}

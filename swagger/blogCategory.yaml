@@ -1,0 +1,172 @@
+{
+  'paths':
+    {
+      '/api/blogCategory/List':
+        {
+          'get':
+            {
+              'tags': ['blog category'],
+              'description': 'Admin can get the list of all blog categories.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'array',
+                                  'items':
+                                    {
+                                      'type': 'object',
+                                      'properties':
+                                        {
+                                          'categoryId': { 'type': 'string', 'example': 'objectId' },
+                                          'title': { 'type': 'string', 'example': 'Tv' },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/blogCategory/{id}':
+        {
+          'get':
+            {
+              'tags': ['blog category'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can get the info of a specific blog category.',
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'categoryId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'Tv' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+
+          'patch':
+            {
+              'tags': ['blog category'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can edit a blog category.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                { 'title': { 'type': 'string', 'example': 'New technology' } },
+                            },
+                        },
+                    },
+                },
+
+              'responses':
+                {
+                  '200':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'categoryId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'Tv' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/blogCategory/':
+        {
+          'post':
+            {
+              'tags': ['blog category'],
+              'description': 'Admin can create a blog category.',
+              'requestBody':
+                {
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            {
+                              'type': 'object',
+                              'properties':
+                                { 'title': { 'type': 'string', 'example': 'New technology' } },
+                            },
+                        },
+                    },
+                },
+              'responses':
+                {
+                  '201':
+                    {
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    {
+                                      'categoryId': { 'type': 'string', 'example': 'objectId' },
+                                      'title': { 'type': 'string', 'example': 'Tv' },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+      '/api/blogCategory/delete/{id}':
+        {
+          'patch':
+            {
+              'tags': ['blog category'],
+              'parameters':
+                [{ 'name': 'id', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'description': 'Admin can delete a blog category.',
+              'responses': { '204': {} },
+            },
+        },
+    },
+}
