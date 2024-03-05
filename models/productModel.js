@@ -55,6 +55,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: 0,
     },
+    softDelete: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
