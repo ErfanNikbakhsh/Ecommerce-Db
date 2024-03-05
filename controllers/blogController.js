@@ -84,8 +84,6 @@ const createBlog = asynchandler(async (req, res, next) => {
     const newBlog = await Blog.create(req.body);
     await newBlog.populate('category', 'title');
 
-    console.log(newBlog.category);
-
     res.status(201).send({
       blogId: newBlog?._id,
       title: newBlog?.title,
