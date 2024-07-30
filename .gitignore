@@ -2,7 +2,7 @@
 node_modules/
 
 # Dotenv environment variables file
-*.env
+# *.env
 
 # Uploaded files
 public/images
