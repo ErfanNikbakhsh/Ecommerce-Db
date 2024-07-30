@@ -1,0 +1,2039 @@
+{
+	"info": {
+		"_postman_id": "3b545225-34aa-4c23-b22a-98a38b220f21",
+		"name": "Db",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27276538"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/user/List",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"List"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/user/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65cf362011194a807961bcd4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code === 200){",
+									"    pm.environment.set(\"AccessToken\" , pm.response.json().access);",
+									"    pm.environment.set('RefreshToken', pm.response.json().refresh);",
+									"}",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const refreshToken = pm.environment.get('RefreshToken');",
+									"const domain = pm.environment.get('Db')",
+									"",
+									"const cookieJar = pm.cookies.jar();",
+									"// cookieJar.set(domain + '/api/user/refreshToken/', { name: 'refreshToken', value: refreshToken, httpOnly: true });",
+									"",
+									"cookieJar.set(domain, { name: 'refreshToken', value: refreshToken, httpOnly: true }, function(error, cookie) {",
+									"  if (error) {",
+									"    console.error(\"Error setting cookie:\", error);",
+									"  } else {",
+									"    console.log(\"Refresh token cookie set successfully:\", cookie);",
+									"  }",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/user/refreshToken",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"refreshToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate Reset Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/user/validateResetToken/:token",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"validateResetToken",
+								":token"
+							],
+							"variable": [
+								{
+									"key": "token",
+									"value": "7dca9e1b24dfd035e470c21cfecab2b259be3867393d33a6467cec4146dcb24d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Wishlist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/user/wishList",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"wishList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"AccessToken\", pm.response.json().access);",
+									"pm.environment.set('RefreshToken', pm.response.json().refresh);",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"karim\",\n  \"lastName\": \"Doe\",\n  \"email\": \"test@gmail.com\",\n  \"mobile\": \"+1234567890\",\n  \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/user/register",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"AccessToken\",  pm.response.json().access);",
+									"pm.environment.set('RefreshToken',  pm.response.json().refresh);",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"Maria@gmail.com\",\n  \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/user/login",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"AccessToken\",  pm.response.json().access);",
+									"pm.environment.set('RefreshToken',  pm.response.json().refresh);",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"Maria@gmail.com\",\n  \"password\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/user/adminLogin",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"adminLogin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const domain = pm.environment.get('Db')",
+									"const refreshToken = pm.environment.get('RefreshToken');",
+									"const cookieJar = pm.cookies.jar();",
+									"",
+									"cookieJar.set(domain, { name: 'refreshToken', value: refreshToken, httpOnly: true });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/user/logout",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/user/forgotPassword",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"forgotPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code === 200){",
+									"    pm.environment.set(\"AccessToken\" , pm.response.json().access);",
+									"    pm.environment.set('RefreshToken', pm.response.json().refresh);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newPass\": \"12345\",\n    \"confirmNewPass\": \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/user/resetPassword/:token",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"resetPassword",
+								":token"
+							],
+							"variable": [
+								{
+									"key": "token",
+									"value": "d754b488f2b77246dce6ceb82bcd51bd380ae92913fe5c907b6a5f807c445a77"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oldPass\": \"1234\",\n    \"newPass\": \"123\",\n    \"confirmNewPass\" : \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/user/changePassword",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"changePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"erfan.com\",\n    \"mobile\": \"4\",\n    \"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/user/edit",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/user/delete",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Block User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/user/blockUser/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"blockUser",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65dd7a0aaad7701ccb10ed96"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UnBlock User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/user/unBlockUser/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"unBlockUser",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65dd7a0aaad7701ccb10ed96"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Get Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/product/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65e2d8cc71bf3e92b890595f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/product/List",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"List"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \" X\",\n  \"slug\": \"-x\",\n  \"description\": \"The latest smartphone with advanced features.\",\n  \"price\": 799.99,\n  \"brand\": \"65ddbaea7ae797b41186ea11\",\n  \"category\": \"65e2d80671bf3e92b890593b\",\n  \"quantity\": 100,\n  \"images\": [\n    {\n      \"publicId\": \"image456\",\n      \"url\": \"https://example.com/images/smartphone.jpg\"\n    }\n  ],\n  \"color\": [\n    \"65ddbbc4997624a53e3ba052\"\n  ],\n  \"ratings\": [\n    {\n      \"star\": 5,\n      \"postedBy\": \"5f6a09df8b0a2b1e74e7d430\",\n      \"comment\": \"Amazing camera quality!\"\n    },\n    {\n      \"star\": 4,\n      \"postedBy\": \"5f6a09df8b0a2b1e74e7d431\",\n      \"comment\": \"Fast performance.\"\n    }\n  ],\n  \"totalRating\": 4.5\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/product",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"price\": 800\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/product/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"product",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65e2cf21f56245308f331beb"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/product/delete/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65e780cfc4ce80a6c2ede684"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Product To Wishlist",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": \"65e781b69d053e4859c230d5\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/product/wishlist",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"wishlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rate Product",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"star\": 1,\n    \"productId\": \"65d312ec6616552415a75e3c\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/product/rating",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Product Images",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/home/ubuntu/Desktop/New Folder/simple.png"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/home/ubuntu/Desktop/New Folder/simple.png"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/home/ubuntu/Downloads/others/focus-49.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Db}}/api/product/upload/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"upload",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65dd8cdec44673928a8a8d87"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blog",
+			"item": [
+				{
+					"name": "Get Blog",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/blog/:id?userId=",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								":id"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65caf0b0a325e503b7f50cd6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Blogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/blog/list",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Blog",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"new Iphone 2030\",\n    \"description\": \"it is the same as Iphone 2022\",\n    \"category\": \"65ddba06b10b589591dbc3b3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/blog",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Blog",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"this blog title is updated\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/blog/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65caf0b0a325e503b7f50cd6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Blog",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/blog/delete/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65caf0b0a325e503b7f50cd6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like A Blog",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/blog/likes?blogId=65caf0b0a325e503b7f50cd6",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"likes"
+							],
+							"query": [
+								{
+									"key": "blogId",
+									"value": "65caf0b0a325e503b7f50cd6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dislike A Blog",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/blog/dislikes?blogId=65caf0b0a325e503b7f50cd6",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"dislikes"
+							],
+							"query": [
+								{
+									"key": "blogId",
+									"value": "65caf0b0a325e503b7f50cd6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Blog Images",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/home/ubuntu/Downloads/others/focus-49.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Db}}/api/blog/upload/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blog",
+								"upload",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65caf0b0a325e503b7f50cd6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product Category",
+			"item": [
+				{
+					"name": "Get Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/prodCategory/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"prodCategory",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d0970121a5b66f1e66929f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/prodCategory/list",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"prodCategory",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \" watch\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/prodCategory",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"prodCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"TV\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/prodCategory/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"prodCategory",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d0970121a5b66f1e66929f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/prodCategory/delete/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"prodCategory",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d0970121a5b66f1e66929f"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blog Category",
+			"item": [
+				{
+					"name": "Get Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/blogCategory/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blogCategory",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d0fa1d329900bf350d5f8d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/blogCategory/list",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blogCategory",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"tv\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/blogCategory",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blogCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"watch\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/blogCategory/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blogCategory",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d0fa1d329900bf350d5f8d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/blogCategory/delete/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"blogCategory",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d0fa1d329900bf350d5f8d"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Brand",
+			"item": [
+				{
+					"name": "Get Brand",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/brand/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d18b99b29809383aaac3b5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Brands",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/brand/list",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Brand",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Sony\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/brand",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"brand"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Brand",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"ABC\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/brand/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d18b99b29809383aaac3b5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Brand",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/brand/delete/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d18b99b29809383aaac3b5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Color",
+			"item": [
+				{
+					"name": "Get Color",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/color/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"color",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65ddbb7c037539a723b65cec"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Color",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/color/list",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"color",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Color",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Purple\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/color",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"color"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Color",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Pink\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/color/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"color",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65ddbb7c037539a723b65cec"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Color",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/color/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"color",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65ddbb7c037539a723b65cec"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Coupon",
+			"item": [
+				{
+					"name": "Get Coupon",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/coupon/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"coupon",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d45d6cc5a9c7cc81017c9a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Coupons",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/coupon/list",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"coupon",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Coupon",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"discountType\": \"fixed\",\n    \"discountAmount\": 100,\n    \"usageLimit\": 1,\n    \"minOrderAmount\": 100,\n    \"expiry\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/coupon",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"coupon"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Coupon",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"discountType\": \"fixed\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/coupon/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"coupon",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d45d6cc5a9c7cc81017c9a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Coupon",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/coupon/delete/:id",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"coupon",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "65d45d6cc5a9c7cc81017c9a"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Get Shopping Cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/cart/get",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add To Shopping Cart",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"colorId\": \"65ddbbc4997624a53e3ba052\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/cart/add/:productId",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"add",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "65e2d8cc71bf3e92b890595f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Apply Coupon",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"couponCode\": \"Wc9OtKXLT8x1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/cart/coupon",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"coupon"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cart",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"colorId\": \"65ddbbc4997624a53e3ba052\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/cart/update/:productId",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"update",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "65e2d8cc71bf3e92b890595f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Item From Cart",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"colorId\": \"65ddbbc4997624a53e3ba052\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/cart/remove/:productId",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"remove",
+								":productId"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "65e2d8cc71bf3e92b890595f"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Get All Orders For A User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/order/List",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"List"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/order/:orderId",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"order",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "65e451df6d65a6e441ead3aa"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/order",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Order",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{Db}}/api/order/delete/:orderId",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"delete",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "65e451df6d65a6e441ead3aa"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"Delivered\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Db}}/api/order/updateStatus/:orderId",
+							"host": [
+								"{{Db}}"
+							],
+							"path": [
+								"api",
+								"order",
+								"updateStatus",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "65e451df6d65a6e441ead3aa"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{AccessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
