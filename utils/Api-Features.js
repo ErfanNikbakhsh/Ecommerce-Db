@@ -47,7 +47,7 @@ const resizeAndSaveImage = async (files, outputFolder) => {
 
 const requestLimiter = rateLimit({
   windowMs: 24 * 60 * 60 * 1000, // 24 hours
-  max: 10, // Limit each user to 5 request attempts per day
+  max: 15, // Limit each user to 5 request attempts per day
   message: 'Too many attempts from this user, please try again later.',
   keyGenerator: (req, res) => req.path,
   // handler: (req, res, next, options) => res.status(options.statusCode).send(options.message),
